@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="cmiLib">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../MMOCore/cmiLib.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../cmiLib.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
