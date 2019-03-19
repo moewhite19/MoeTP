@@ -1,0 +1,18 @@
+worlds:
+  #世界名
+  test:
+    #中心点
+    Center:
+        x: 0
+        z: 0
+    #大小
+    Size: 120000
+    #伤害距离
+    DamageBuffer: 2
+    #伤害值
+    DamageAmount: 2
+    #警告时间
+    WarningTime: 5
+    #警告距离
+    WarningDistance: 1
+

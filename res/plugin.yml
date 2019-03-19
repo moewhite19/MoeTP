@@ -1,0 +1,99 @@
+name: MoeTP
+main: cn.whiteg.moetp.MoeTP
+version: 1.2
+api-version: 1.13
+author: MoeWhite
+depend: [MMOCore]
+softdepend: [Vault, MoeInfo, dynmap, BlueMap]
+commands:
+  moetp:
+    description: The is MoeTP
+    aliases: ['mt']
+  back:
+    description: Back
+    aliases: ['bk','b']
+  spawn:
+    description: Tp To Spawn
+    aliases: ['sp']
+  setspawn:
+    description: Set Spawn
+    aliases: ['ssp']
+  confirm:
+    description: Confirm
+    aliases: ['cf','c']
+  cancel:
+    description: Confirm
+    aliases: ['cc','cl']
+  warp:
+    description: Warp
+    aliases: ['w','wp' , 'warps']
+  setwarp:
+    description: SetWarp
+    aliases: ['sw','swp']
+  rmwarp:
+    description: RemoveWarp
+    aliases: ['rwp' , 'delwarp'  , 'dwp']
+  home:
+    description: Warp
+    aliases: ['h','hm', 'homes']
+  sethome:
+    description: SetWarp
+    aliases: ['sh','shm']
+  rmhome:
+    description: RemoveWarp
+    aliases: ['rhm' , 'delhome' , 'dhm']
+  tpa:
+    description: Tp Comand
+    aliases: ['ta']
+  tpahere:
+    description: Tp Comand
+    aliases: ['tah']
+  tpo:
+    description: Tp Comand
+    aliases: ['ta']
+  tpohere:
+    description: Tp Comand
+    aliases: ['toh']
+  tpaall:
+    description: Tp Comand
+    aliases: ['taa']
+  tpall:
+    description: Tp Comand
+    aliases: ['ta']
+
+  fly:
+    description: Tp Comand
+    aliases: ['fl' , 'fy']
+  speed:
+    description: Tp Comand
+    aliases: ['fl' , 'fy']
+
+  ohome:
+    description: Tp Comand
+    aliases: ['oh' , 'ohm']
+
+  top:
+    description: Top Comand
+    aliases: ['t']
+
+  rideo:
+    description: Ride Command
+    aliases:
+      - 'rdo'
+      - 'reo'
+
+  ride:
+    description: Ride Command
+    aliases:
+      - 'rd'
+      - 're'
+
+  rideme:
+    description: Dide Me Command
+    aliases:
+      - 'rdm'
+      - 'rem'
+
+  eject:
+    description: Eject Command
+

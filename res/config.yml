@@ -1,0 +1,51 @@
+ver: 11
+debug: false
+#玩家设置
+Player:
+  #最大Home
+  #用户数据的Player.ExtraHome可以给玩家设置额外的home
+  #如: /ud set MoeWhite Player.ExtraHome 999
+  MaxHomes: 5
+
+AutoSetFly: false
+#飞行速度
+FlySpeed: 0.2
+#替换重生点
+setRespawn: true
+#替换出生点
+joinSpawn: true
+
+#扣钱倍率(多少方块/金钱) 不需要可改成0
+deductMoneyRate: 0.001
+#传送cd倍率(多少毫秒/方块) 不需要可改成0
+coolDownRate: 2
+#扣钱和Cd忽略已加载区块
+ignoreLoadedChunk: true
+
+#传送等待
+TelportDelay:
+  #等待时间
+  DelaySecond: 3
+  #粒子动画
+  PlayParticle: true
+  #开始音效 格式([声音ID] [音量] [音调] [声音类型])
+  StartSound: 'block.portal.ambient 1.5 1 PLAYERS'
+  #打断音效 (数组组合)
+  BreakSound:
+    - 'block.enchantment_table.use 1.5 1.2 PLAYERS'
+    - 'ui.stonecutter.take_result 1.5 1.5'
+  #结束音效
+  EndSound: 
+    - 'ui.toast.in 2 0.9'
+    - 'item.hoe.till 2 0.5'
+    - 'block.composter.empty 2 0.7'
+
+
+#使用异步传送
+teleportAsync: false
+
+#防止传送出边界和地狱基岩上方
+outOfBorder: true
+
+#防止传送出地狱基岩上
+outOfNether: true
