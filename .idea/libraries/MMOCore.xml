@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="MMOCore">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../MMOCore" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../MMOCore/src" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/../MMOCore" recursive="false" />
+  </library>
+</component>

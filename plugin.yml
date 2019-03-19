@@ -1,0 +1,54 @@
+name: MoeTP
+main: cn.whiteg.moetp.MoeTP
+version: 1.1
+author: MoeWhite
+softdepend: [MMOCore]
+commands:
+  moetp:
+    description: The is MoeTP
+    aliases: ['mt']
+  back:
+    description: back
+    aliases: ['bk','b']
+  spawn:
+    description: spawn
+    aliases: ['sp']
+  setspawn:
+    description: setspawn
+    aliases: ['ssp']
+  confirm:
+    description: Confirm
+    aliases: ['cf','c']
+  cancel:
+    description: Confirm
+    aliases: ['cc','cl']
+  warp:
+    description: Warp
+    aliases: ['w','wp' , 'warps']
+  setwarp:
+    description: SetWarp
+    aliases: ['sw','swp']
+  rmwarp:
+    description: RemoveWarp
+    aliases: ['rwp' , 'delwarp'  , 'dwp']
+  home:
+    description: Warp
+    aliases: ['h','hm', 'homes']
+  sethome:
+    description: SetWarp
+    aliases: ['sh','shm']
+  rmhome:
+    description: RemoveWarp
+    aliases: ['rhm' , 'delhome' , 'dhm']
+  tpa:
+    description: Tp Comand
+    aliases: ['ta']
+  tpahere:
+    description: Tp Comand
+    aliases: ['tah']
+  tpaall:
+    description: Tp Comand
+    aliases: ['taa']
+  tpall:
+    description: Tp Comand
+    aliases: ['ta']

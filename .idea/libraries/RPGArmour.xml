@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="RPGArmour">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../RPGArmour" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../RPGArmour/src" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/../RPGArmour" recursive="false" />
+  </library>
+</component>
