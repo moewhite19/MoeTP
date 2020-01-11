@@ -2,7 +2,6 @@ package cn.whiteg.moetp.commands;
 
 import cn.whiteg.mmocore.CommandInterface;
 import cn.whiteg.moetp.utils.EntityTpUtils;
-import cn.whiteg.moetp.utils.WarpManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -12,32 +11,30 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class spawn extends CommandInterface {
+public class top extends CommandInterface {
 
     @Override
     public boolean onCommand(CommandSender sender,Command cmd,String label,String[] args) {
         if (args.length == 1){
             if (sender instanceof Player){
-                if (!sender.hasPermission("mmo.warp")) return false;
-                EntityTpUtils.PlayerTP((Player) sender,WarpManager.getSpawn());
-                sender.sendMessage("§b传送到出生点");
+                if (!sender.hasPermission("mmo.top.self")) return false;
+                Location loc = ((Player) sender).getLocation();
+                loc.setY(loc.getWorld().getHighestBlockYAt(loc));
+                EntityTpUtils.PlayerOnceTp((Player) sender,loc);
+                sender.sendMessage("§b传送到顶部");
                 return true;
             }
         } else if (args.length == 2){
-            if (sender.hasPermission("mmo.tp.other")){
+            if (sender.hasPermission("mmo.top.other")){
                 final Player player = Bukkit.getPlayer(args[1]);
                 if (player == null){
                     sender.sendMessage("§b找不到玩家");
                     return true;
                 }
-                final Location loc = WarpManager.getSpawn();
-                if (loc == null){
-                    sender.sendMessage("未知传送点");
-                    return true;
-                }
+                Location loc = player.getLocation();
+                loc.setY(loc.getWorld().getHighestBlockYAt(loc));
                 EntityTpUtils.PlayerOnceTp(player,loc);
-//                EntityTpUtils.PlayerTpNoCd(player,loc);
-                sender.sendMessage("§b将 §f" + player.getName() + " §b传送到出生点");
+                sender.sendMessage("§b将 §f" + player.getName() + " §b传送到顶部");
             }
         }
         return false;

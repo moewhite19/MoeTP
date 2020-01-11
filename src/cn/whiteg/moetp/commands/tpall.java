@@ -20,7 +20,7 @@ public class tpall extends CommandInterface {
                 sender.sendMessage("§b所有玩家传送至阁下");
                 for (Player p2 : Bukkit.getOnlinePlayers()) {
                     if(p1 == p2 ) continue;
-                    if(EntityTpUtils.PlayerTP(p2 , p1.getLocation())) p1.sendMessage(p2.getDisplayName() + " 没有传送成功");
+                    if(EntityTpUtils.PlayerTP(p2 , p1.getLocation() , false)) p1.sendMessage(p2.getDisplayName() + " 没有传送成功");
                 }
             }else {
 
@@ -29,7 +29,7 @@ public class tpall extends CommandInterface {
         }else {
             sender.sendMessage("§a/tpaall§b请求所有玩家传送至阁下");
         }
-        return false;
+        return true;
     }
 
     @Override

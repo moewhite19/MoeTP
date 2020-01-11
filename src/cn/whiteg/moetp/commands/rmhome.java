@@ -29,6 +29,7 @@ public class rmhome extends CommandInterface {
             ConfigurationSection homes = dc.getConfig().getConfigurationSection("homes");
             homes.set(args[1] , null);
             sender.sendMessage("删除home " + args[1]);
+            dc.onSet();
             return true;
         }
         return false;

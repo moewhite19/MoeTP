@@ -1,32 +1,27 @@
 package cn.whiteg.moetp.Event;
 
+import com.sun.istack.internal.NotNull;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-public class PlayerFarTpEvent extends PlayerEvent implements Cancellable {
+public class PlayerFarTpEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private boolean cancel = false;
-    private final Location from;
-    private Location to;
-    private PlayerTeleportEvent.TeleportCause cause;
+    @NotNull
+    private final PlayerTeleportEvent playerTeleportEvent;
+    private double dis;
 
-    public PlayerFarTpEvent(Player who,Location from,Location to,PlayerTeleportEvent.TeleportCause cause) {
-        super(who);
-        this.from = from;
-        this.to = to;
-        this.cause = cause;
+    public PlayerFarTpEvent(@NotNull PlayerTeleportEvent event) {
+        playerTeleportEvent = event;
+        updataDis();
     }
 
-    public PlayerFarTpEvent(Player who,Location from,Location to) {
-        super(who);
-        this.from = from;
-        this.to = to;
-        cause = PlayerTeleportEvent.TeleportCause.UNKNOWN;
+    public PlayerFarTpEvent(@NotNull PlayerTeleportEvent event,double dis) {
+        playerTeleportEvent = event;
+        this.dis = dis;
     }
 
     @Override
@@ -40,27 +35,50 @@ public class PlayerFarTpEvent extends PlayerEvent implements Cancellable {
 
     @Override
     public boolean isCancelled() {
-        return cancel;
+        return playerTeleportEvent.isCancelled();
     }
 
     @Override
     public void setCancelled(boolean b) {
-        cancel = b;
+        playerTeleportEvent.setCancelled(b);
     }
 
     public Location getFrom() {
-        return from;
+        return playerTeleportEvent.getFrom();
     }
 
     public Location getTo() {
-        return to;
+        return playerTeleportEvent.getTo();
     }
 
     public void setTo(Location location) {
-        to = location;
+        playerTeleportEvent.setTo(location);
+        updataDis();
     }
 
     public PlayerTeleportEvent.TeleportCause getCause() {
-        return cause;
+        return playerTeleportEvent.getCause();
+    }
+
+    @NotNull
+    public PlayerTeleportEvent getPlayerTeleportEvent() {
+        return playerTeleportEvent;
+    }
+
+    public double getDistance() {
+        return dis;
+    }
+
+    public Player getPlayer() {
+        return playerTeleportEvent.getPlayer();
+    }
+
+    public double updataDis() {
+        if (getFrom().getWorld() == getTo().getWorld()){
+            dis = playerTeleportEvent.getFrom().distance(getTo());
+        } else {
+            dis = Double.MAX_VALUE;
+        }
+        return dis;
     }
 }

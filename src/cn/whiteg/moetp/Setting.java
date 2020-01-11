@@ -1,9 +1,6 @@
 package cn.whiteg.moetp;
 
-import cn.whiteg.mmocore.util.YamlUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
+import cn.whiteg.mmocore.DataCon;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -11,21 +8,61 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 public class Setting {
+    final private static int CONFIGVER = 7;
+    public static String REQUSET_SOUND;
     public static boolean DEBUG;
     public static List<String> subCommands;
-    public static FileConfiguration config;
-    public static Location spawnLoc;
     public static FileConfiguration warps;
+    public static FileConfiguration worldborder;
     public static int PlayerMaxHomes;
+    public static boolean AUTO_SETFLY;
+    public static Double FLY_SPEED;
+    public static int tpcd;
+    public static boolean joinSpawn = false;
+    public static boolean setRespawn = false;
+    public static double deductMoneyRate = 0.0001D;
+    public static double rcoolDownRate = 2;
+    public static int DelayTpTime = 0;
 
     public static void reload() {
+
         File file = new File(MoeTP.plugin.getDataFolder(),"config.yml");
-        config = YamlConfiguration.loadConfiguration(file);
+        final FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        //config = RPGArmour.plugin.getConfig();
+        //自动更新配置文件
+        if (config.getInt("ver") < CONFIGVER){
+            MoeTP.plugin.saveResource("config.yml",true);
+            config.set("ver",CONFIGVER);
+            final FileConfiguration newcon = YamlConfiguration.loadConfiguration(file);
+            Set<String> keys = newcon.getKeys(true);
+            for (String k : keys) {
+                if (config.isSet(k)) continue;
+                config.set(k,newcon.get(k));
+                MoeTP.logger.info("新增配置节点: " + k);
+            }
+            try{
+                config.save(file);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
         DEBUG = config.getBoolean("debug");
-        subCommands = Arrays.asList("back","spawn","setspawn","confirm","cancel","setwarp","warp","rmwarp","tpa","tpo","tpohere","tpahere","tpall","tpaall","home","sethome","rmhome");
+        subCommands = Arrays.asList("back","spawn","setspawn","confirm","cancel","setwarp","warp","rmwarp","tpa","tpo","tpohere","tpahere","tpall","tpaall","home","sethome","rmhome","fly","speed","ohome","top");
         PlayerMaxHomes = config.getInt("Player.MaxHomes",5);
+        AUTO_SETFLY = config.getBoolean("AutoSetFly",false);
+        FLY_SPEED = config.getDouble("FlySpeed",0.05);
+        REQUSET_SOUND = config.getString("Request_Sound","entity.player.levelup");
+        tpcd = config.getInt("TpCd",5000);
+        joinSpawn = config.getBoolean("joinSpawn",joinSpawn);
+        setRespawn = config.getBoolean("setRespawn",setRespawn);
+        deductMoneyRate = config.getDouble("deductMoneyRate",deductMoneyRate);
+        rcoolDownRate = config.getDouble("rcoolDownRate",rcoolDownRate);
+        DelayTpTime = config.getInt("DelayTpTime",DelayTpTime);
+
+
         //读取warp.yml
         file = new File(MoeTP.plugin.getDataFolder(),"warps.yml");
         if (file.exists()){
@@ -33,24 +70,22 @@ public class Setting {
         } else {
             warps = new YamlConfiguration();
         }
-        //获取spawn传送点
-        ConfigurationSection cs = Setting.warps.getConfigurationSection("spawn");
-        if (cs == null){
-            spawnLoc = Bukkit.getWorlds().get(0).getSpawnLocation();
+        //读取WorldBorder.yml
+        file = new File(MoeTP.plugin.getDataFolder(),"worldborder.yml");
+        if (file.exists()){
+            worldborder = YamlConfiguration.loadConfiguration(file);
         } else {
-            spawnLoc = YamlUtils.getLocation(cs);
+            worldborder = new YamlConfiguration();
+            try{
+                worldborder.save(file);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
         }
     }
 
-    //储存warp传送点
-    public static void saveWarps() {
-        try{
-            File file = new File(MoeTP.plugin.getDataFolder(),"warps.yml");
-            if (!file.exists()) file.createNewFile();
-            Setting.warps.save(file);
-        }catch (IOException e){
-            e.printStackTrace();
-            MoeTP.logger.info("warp储存失败");
-        }
+    public static int getPlayerMaxHomes(DataCon dc) {
+        boolean b = dc.getConfig().getBoolean("Authenticate.Success",false);
+        return b ? PlayerMaxHomes + 1 : PlayerMaxHomes;
     }
 }

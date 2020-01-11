@@ -7,22 +7,45 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 public class PlayerTP implements Listener {
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    final private TeleportCause[] at = {TeleportCause.UNKNOWN,TeleportCause.COMMAND,TeleportCause.PLUGIN,TeleportCause.SPECTATE};
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void PlayerOnTP(PlayerTeleportEvent event) {
+        if (!con(event.getCause())) return;
         Location from = event.getFrom();
         Location to = event.getTo();
+        final double dis;
         if (from.getWorld() == to.getWorld()){
-            Double v = event.getFrom().distance(event.getTo());
-            if (v < 16) return;
+            dis = from.distance(to);
+//            if (from.getX() > to.getX()){
+//                v += from.getX() - to.getX();
+//            } else {
+//                v += to.getX() - from.getX();
+//            }
+//            if (from.getZ() > to.getZ()){
+//                v += from.getZ() - to.getZ();
+//            } else {
+//                v += to.getZ() - from.getZ();
+//            }
+            if (dis < 1) return;
+        } else {
+            dis = Double.MAX_VALUE;
         }
-        PlayerFarTpEvent tpEvent = new PlayerFarTpEvent(event.getPlayer(),from,to,event.getCause());
+        PlayerFarTpEvent tpEvent = new PlayerFarTpEvent(event,dis);
         Bukkit.getPluginManager().callEvent(tpEvent);
-        event.setTo(tpEvent.getTo());
-        event.setCancelled(tpEvent.isCancelled());
     }
-    public void unreg(){
-        PlayerFarTpEvent.getHandlerList().unregister(this);
+
+    private boolean con(TeleportCause cause) {
+        for (int i = 0; i < at.length; i++) {
+            if (at[i].equals(cause)) return true;
+        }
+        return false;
+    }
+
+    public void unreg() {
+        PlayerTeleportEvent.getHandlerList().unregister(this);
     }
 }

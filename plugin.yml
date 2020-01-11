@@ -11,7 +11,7 @@ commands:
     description: back
     aliases: ['bk','b']
   spawn:
-    description: spawn
+    description: SPAWN
     aliases: ['sp']
   setspawn:
     description: setspawn
@@ -46,9 +46,32 @@ commands:
   tpahere:
     description: Tp Comand
     aliases: ['tah']
+  tpo:
+    description: Tp Comand
+    aliases: ['ta']
+  tpohere:
+    description: Tp Comand
+    aliases: ['tah']
+
   tpaall:
     description: Tp Comand
     aliases: ['taa']
   tpall:
     description: Tp Comand
     aliases: ['ta']
+
+  fly:
+    description: Tp Comand
+    aliases: ['fl' , 'fy']
+  speed:
+    description: Tp Comand
+    aliases: ['fl' , 'fy']
+
+  ohome:
+    description: Tp Comand
+    aliases: ['oh' , 'ohm']
+
+  top:
+    description: top Comand
+    aliases: ['t']
+

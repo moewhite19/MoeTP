@@ -7,9 +7,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="spigot-1.13.2" level="project" />
-    <orderEntry type="library" name="cmiLib" level="project" />
-    <orderEntry type="library" name="MMOCore" level="project" />
     <orderEntry type="library" name="RPGArmour" level="project" />
+    <orderEntry type="library" name="MoeInfo" level="project" />
+    <orderEntry type="library" name="MMOCore" level="project" />
+    <orderEntry type="library" name="Vault-1.7.1" level="project" />
+    <orderEntry type="library" name="patched_1.15.1" level="application" />
   </component>
 </module>

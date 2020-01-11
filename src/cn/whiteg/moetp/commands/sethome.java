@@ -3,8 +3,8 @@ package cn.whiteg.moetp.commands;
 import cn.whiteg.mmocore.CommandInterface;
 import cn.whiteg.mmocore.DataCon;
 import cn.whiteg.mmocore.MMOCore;
-import cn.whiteg.moetp.Setting;
 import cn.whiteg.mmocore.util.YamlUtils;
+import cn.whiteg.moetp.Setting;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -22,9 +22,9 @@ public class sethome extends CommandInterface {
         Player player = (Player) sender;
         if (!sender.hasPermission("mmo.sethome")) return false;
         if (args.length == 1){
-            sethome(player,player.getLocation() ,"home");
+            sethome(player,player.getLocation(),"home");
         } else if (args.length == 2){
-            sethome(player , player.getLocation() , args[1]);
+            sethome(player,player.getLocation(),args[1]);
         }
         return false;
     }
@@ -44,8 +44,9 @@ public class sethome extends CommandInterface {
         }
         return null;
     }
-    void sethome(Player player , Location location , String home){
-        if(home.contains(".")){
+
+    void sethome(Player player,Location location,String home) {
+        if (home.contains(".")){
             player.sendMessage("§b名字含非法字符");
             return;
         }
@@ -55,15 +56,21 @@ public class sethome extends CommandInterface {
             homes = dc.createSection("homes");
         }
         int homesize = homes.getKeys(false).size();
-        int m = dc.getConfig().getInt("MaxHomes" , Setting.PlayerMaxHomes);
-        if(homesize >= m){
+        int maxhome = dc.getConfig().getInt("Player.ExtraHome",0) + Setting.PlayerMaxHomes;
+        ConfigurationSection cs = homes.getConfigurationSection(home);
+
+        if (cs != null && homesize <= maxhome){
+            YamlUtils.setLocation(cs,location);
+            player.sendMessage("覆盖home " + home);
+            dc.onSet();
+        } else if (homesize < maxhome){
+            cs = homes.createSection(home);
+            YamlUtils.setLocation(cs,location);
+            player.sendMessage("设置home " + home);
+            dc.onSet();
+        } else {
             player.sendMessage("§b你的home数量已达到上限");
-            if(!player.hasPermission("whiteg.test")){
-                return;
-            }
         }
-        ConfigurationSection cs = homes.createSection(home);
-        YamlUtils.setLocation(cs,location);
-        player.sendMessage("设置home " + home);
+
     }
 }

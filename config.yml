@@ -1,4 +1,22 @@
-var: 2
+ver: 7
 debug: false
+
 Player:
   MaxHomes: 5
+
+AutoSetFly: false
+#飞行速度
+FlySpeed: 0.2
+#传送请求提示音
+Request_Sound: 'entity.player.levelup'
+#替换重生点
+setRespawn: true
+#替换出生点
+joinSpawn: true
+
+#扣钱倍率(多少方块/金钱) 不需要可改成0
+deductMoneyRate: 0.001
+#传送cd倍率(多少毫秒/方块) 不需要可改成0
+coolDownRate: 2
+#传送准备时间: 秒
+DelayTpTime: 3

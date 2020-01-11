@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="cmiLib">
+  <library name="MoeInfo">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../cmiLib.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../MoeInfo/MoeInfo.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

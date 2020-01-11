@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="MMOCore">
+  <library name="Vault-1.7.1">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../MMOCore/MMOCore.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../Vault-1.7.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

@@ -9,10 +9,18 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class imop extends CommandInterface {
+public class impo extends CommandInterface {
+
+    public impo() {
+        arr.add("esshoms");
+        arr.add("esswarp");
+    }
+
+    List<String> arr = new ArrayList<>();
 
     @Override
     public boolean onCommand(CommandSender sender,Command cmd,String label,String[] args) {
@@ -37,7 +45,9 @@ public class imop extends CommandInterface {
                             e.printStackTrace();
                         }
                     }
-                }else {
+                } else if (args[1].equals("esswarp")){
+
+                } else {
                     sender.sendMessage("未知选项");
                 }
 
@@ -52,6 +62,6 @@ public class imop extends CommandInterface {
 
     @Override
     public List<String> onTabComplete(CommandSender sender,Command cmd,String label,String[] args) {
-        return null;
+        return arr;
     }
 }
