@@ -20,6 +20,7 @@ public class PlayerSpawnListener implements Listener {
         final DataCon pd = MMOCore.getPlayerData(p);
         if (pd.get("Player.quit_time") == null){
             chan(p);
+            p.setBedSpawnLocation(WarpManager.getSpawn(),true);
         }
     }
 
@@ -30,8 +31,6 @@ public class PlayerSpawnListener implements Listener {
 
 
     private void chan(Player player) {
-        DataCon dc = MMOCore.getPlayerData(player);
-        if (dc == null) return;
         if (Setting.joinSpawn){
             final Location loc = WarpManager.getSpawn();
 //            player.setBedSpawnLocation(loc);

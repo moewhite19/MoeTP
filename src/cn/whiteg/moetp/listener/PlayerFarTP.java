@@ -1,5 +1,6 @@
 package cn.whiteg.moetp.listener;
 
+import cn.whiteg.mmocore.DataCon;
 import cn.whiteg.mmocore.MMOCore;
 import cn.whiteg.mmocore.util.CoolDownUtil;
 import cn.whiteg.mmocore.util.YamlUtils;
@@ -24,6 +25,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class PlayerFarTP implements Listener {
 
@@ -55,12 +57,15 @@ public class PlayerFarTP implements Listener {
                 y++;
             }
         }
-        YamlUtils.setLocation(MMOCore.getPlayerData(p).getConfig(),"Player.Back",loc);
+        DataCon dc = MMOCore.getPlayerData(p);
+        YamlUtils.setLocation(dc.getConfig(),"Player.Back",loc);
+        dc.onSet();
         return true;
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void tp(PlayerFarTpEvent event) {
+        if (event.getCause() != PlayerTeleportEvent.TeleportCause.PLUGIN) return;
         if (hasDec(event.getTo(),event.getFrom())) return;
         final Player p = event.getPlayer();
         final boolean isNoCd = p.getName().equals(EntityTpUtils.noCdPlayer);

@@ -19,7 +19,7 @@ public class top extends CommandInterface {
             if (sender instanceof Player){
                 if (!sender.hasPermission("mmo.top.self")) return false;
                 Location loc = ((Player) sender).getLocation();
-                loc.setY(loc.getWorld().getHighestBlockYAt(loc));
+                loc.setY(loc.getWorld().getHighestBlockYAt(loc) + 1D);
                 EntityTpUtils.PlayerOnceTp((Player) sender,loc);
                 sender.sendMessage("§b传送到顶部");
                 return true;
@@ -32,7 +32,7 @@ public class top extends CommandInterface {
                     return true;
                 }
                 Location loc = player.getLocation();
-                loc.setY(loc.getWorld().getHighestBlockYAt(loc));
+                loc.setY(loc.getWorld().getHighestBlockYAt(loc) + 1D);
                 EntityTpUtils.PlayerOnceTp(player,loc);
                 sender.sendMessage("§b将 §f" + player.getName() + " §b传送到顶部");
             }

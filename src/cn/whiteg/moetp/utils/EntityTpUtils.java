@@ -6,24 +6,43 @@ import cn.whiteg.moetp.api.DelayTp;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
+import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.spigotmc.event.entity.EntityDismountEvent;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
 public class EntityTpUtils {
+    public final static Field vehicleField;
     public static Map<String, Long> tpTime = new WeakHashMap<>();
     public static String noCdPlayer = "";
     public static String noBackPlayer = "";
 
+    static {
+        Field f = null;
+        try{
+            f = net.minecraft.server.v1_15_R1.Entity.class.getDeclaredField("vehicle");
+            f.setAccessible(true);
+        }catch (NoSuchFieldException e){
+            e.printStackTrace();
+        }
+        vehicleField = f;
+    }
+
     public static void PlayerTpNoCd(Player p,Location loc) {
         noCdPlayer = p.getName().intern();
         p.teleport(loc);
+
     }
 
     public static boolean PlayerTP(Player p,Location loc) {
@@ -52,7 +71,7 @@ public class EntityTpUtils {
             DelayTp.PlayerTp(p,loc,Setting.DelayTpTime);
         } else {
             p.eject();
-            return PlayerOnceTp(p , loc);
+            return PlayerOnceTp(p,loc);
         }
 /*
         final byte[] con = {1}; BukkitRunnable br = new BukkitRunnable() {
@@ -122,6 +141,7 @@ public class EntityTpUtils {
         player.eject();
         player.closeInventory();
         player.setFallDistance(0F);
+        forgeStopRide(player);
         return player.teleport(loc);
     }
 
@@ -211,5 +231,25 @@ public class EntityTpUtils {
         if (entity.getVehicle() == null) return entity;
         list.add(entity.getVehicle());
         return getEntityDownList(entity.getVehicle(),list);
+    }
+
+    public static void forgeStopRide(Entity entity) {
+        net.minecraft.server.v1_15_R1.Entity ne = ((CraftEntity) entity).getHandle();
+        net.minecraft.server.v1_15_R1.Entity nv = ne.getVehicle();
+        if (nv != null){
+            Entity v = entity.getVehicle();
+            if (v instanceof Vehicle && entity instanceof LivingEntity){
+                VehicleExitEvent ev = new VehicleExitEvent((Vehicle) v,(LivingEntity) entity);
+                ev.callEvent();
+            }
+            EntityDismountEvent ev = new EntityDismountEvent(entity,v);
+            ev.callEvent();
+            ne.getVehicle().passengers.remove(ne);
+            try{
+                vehicleField.set(ne,null);
+            }catch (IllegalAccessException e){
+                e.printStackTrace();
+            }
+        }
     }
 }
