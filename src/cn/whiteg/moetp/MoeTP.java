@@ -1,8 +1,6 @@
 package cn.whiteg.moetp;
 
-import cn.whiteg.mmocore.common.CommandInterface;
 import cn.whiteg.mmocore.common.PluginBase;
-import cn.whiteg.mmocore.util.PluginUtil;
 import cn.whiteg.moetp.listener.*;
 import cn.whiteg.moetp.utils.WorldBorderManager;
 import net.milkbowl.vault.economy.Economy;
@@ -10,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import java.util.Map;
 import java.util.logging.Logger;
 
 import static cn.whiteg.moetp.Setting.reload;
@@ -20,7 +17,6 @@ public class MoeTP extends PluginBase {
     public static Logger logger;
     public static MoeTP plugin;
     public CommandManage mainCommand;
-    private CommandManage.SubCommand subCommander;
     private Economy economy;
 
     public MoeTP() {
@@ -59,14 +55,6 @@ public class MoeTP extends PluginBase {
         if (Setting.setRespawn) regListener(new PlayerReSpawnListener());
 //        regEven(new PlayerReSpawnListener());
         if (Setting.AUTO_SETFLY) regListener(new PlayerAutoSetFlyListener());
-        for (Map.Entry<String, CommandInterface> entry : mainCommand.commandMap.entrySet()) {
-            String cmd = entry.getKey();
-            PluginCommand c = PluginUtil.getPluginCommanc(this,cmd);
-            if (c != null){
-                c.setExecutor(subCommander);
-                c.setTabCompleter(subCommander);
-            }
-        }
         WorldBorderManager.set();
         if (Bukkit.getPluginManager().getPlugin("Vault") != null){
             RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
