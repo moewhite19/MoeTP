@@ -1,6 +1,6 @@
 package cn.whiteg.moetp.commands;
 
-import cn.whiteg.mmocore.CommandInterface;
+import cn.whiteg.mmocore.common.CommandInterface;
 import cn.whiteg.moetp.CommandManage;
 import cn.whiteg.moetp.utils.PlayerFlyManage;
 import com.mysql.fabric.xmlrpc.base.Array;

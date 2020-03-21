@@ -74,7 +74,7 @@ public class PlayerFarTP implements Listener {
         } else {
             final String tcn = "§3传送";
             final double d = LocationUtils.LocationDistance(event.getFrom(),event.getTo());
-            if (!CoolDownUtil.hasCd(p.getName(),tcn)){
+            if (!p.hasPermission("mmo.tpnocd") && !CoolDownUtil.hasCd(p.getName(),tcn)){
                 ActionBar.sendActionBar(p,"§3§l> §b阁下传送还在冷却中,下次充能完成还需要§f" + CoolDownUtil.getCds(p.getName(),tcn) + "§b秒 §3§l<");
                 event.setCancelled(true);
                 return;
@@ -82,7 +82,7 @@ public class PlayerFarTP implements Listener {
             if (Setting.deductMoneyRate > 0){
                 EconomyResponse status = MoeTP.plugin.getEconomy().withdrawPlayer(event.getPlayer(),d * Setting.deductMoneyRate);
                 if (status.type == EconomyResponse.ResponseType.SUCCESS){
-                    p.sendMessage("§b已消费§f" + status.amount + "§b用于传送");
+                    p.sendMessage("§b已消费§f" + status.amount + MoeTP.plugin.getEconomy().currencyNamePlural() + "§b用于传送");
                 } else {
                     p.sendMessage("§b无法传送到目标，原因: §f" + status.errorMessage);
                     event.setCancelled(true);

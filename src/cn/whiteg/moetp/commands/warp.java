@@ -1,6 +1,6 @@
 package cn.whiteg.moetp.commands;
 
-import cn.whiteg.mmocore.CommandInterface;
+import cn.whiteg.mmocore.common.CommandInterface;
 import cn.whiteg.moetp.Setting;
 import cn.whiteg.moetp.utils.EntityTpUtils;
 import cn.whiteg.moetp.utils.WarpManager;
@@ -24,7 +24,7 @@ public class warp extends CommandInterface {
         if (!sender.hasPermission("mmo.warp")) return false;
         if (args.length == 1){
             Set<String> keys = Setting.warps.getKeys(false);
-            sender.sendMessage("当前可用传送点有:");
+//            sender.sendMessage("当前可用传送点有:");
             ComponentBuilder cb = new ComponentBuilder("当前可用warp有:\n");
             for (String st : keys) {
                 cb.append(st + " ").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/warp " + st)).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("点我传送至§9" + st).create()));

@@ -33,7 +33,7 @@ public class DelayTp {
         this.sloc = player.getLocation();
         this.num = deny;
         if (deny >= 1){
-            bossBar = Bukkit.createBossBar("§b传送准备",BarColor.WHITE,BarStyle.SEGMENTED_10);
+            bossBar = Bukkit.createBossBar("§b传送准备",BarColor.WHITE,BarStyle.SOLID);
             bossBar.addPlayer(player);
             bossBar.setProgress(0);
             task = new BukkitRunnable() {

@@ -1,6 +1,6 @@
 package cn.whiteg.moetp.commands;
 
-import cn.whiteg.mmocore.CommandInterface;
+import cn.whiteg.mmocore.common.CommandInterface;
 import cn.whiteg.mmocore.DataCon;
 import cn.whiteg.mmocore.MMOCore;
 import cn.whiteg.mmocore.util.YamlUtils;
@@ -43,7 +43,7 @@ public class ohome extends CommandInterface {
             }
             ComponentBuilder cb = new ComponentBuilder("当前可用home有:\n");
             for (String st : keys) {
-                cb.append(st + " ").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/home " + st)).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("点我传送至§9" + st).create()));
+                cb.append(st + " ").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/ohome " + dc.getName() + ' ' + st)).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("点我传送至§9" + st).create()));
             }
             player.spigot().sendMessage(cb.create());
         } else if (args.length == 3){
@@ -56,7 +56,6 @@ public class ohome extends CommandInterface {
             if (homes == null){
                 return false;
             }
-            if (!sender.hasPermission("mmo.home")) return false;
             ConfigurationSection cs = homes.getConfigurationSection(args[2]);
             if (cs == null){
                 sender.sendMessage("§b传送点不存在");

@@ -1,6 +1,6 @@
 package cn.whiteg.moetp.commands;
 
-import cn.whiteg.mmocore.CommandInterface;
+import cn.whiteg.mmocore.common.CommandInterface;
 import cn.whiteg.moetp.MoeTP;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

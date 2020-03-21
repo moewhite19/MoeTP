@@ -11,6 +11,6 @@
     <orderEntry type="library" name="MoeInfo" level="project" />
     <orderEntry type="library" name="MMOCore" level="project" />
     <orderEntry type="library" name="Vault-1.7.1" level="project" />
-    <orderEntry type="library" name="patched_1.15.1" level="application" />
+    <orderEntry type="library" name="patched_1.15.2" level="application" />
   </component>
 </module>

@@ -2,7 +2,8 @@ name: MoeTP
 main: cn.whiteg.moetp.MoeTP
 version: 1.1
 author: MoeWhite
-softdepend: [MMOCore]
+depend: [MMOCore]
+softdepend: []
 commands:
   moetp:
     description: The is MoeTP
@@ -51,8 +52,7 @@ commands:
     aliases: ['ta']
   tpohere:
     description: Tp Comand
-    aliases: ['tah']
-
+    aliases: ['toh']
   tpaall:
     description: Tp Comand
     aliases: ['taa']

@@ -1,7 +1,7 @@
 package cn.whiteg.moetp.commands;
 
 import cn.whiteg.mmocore.DataCon;
-import cn.whiteg.mmocore.CommandInterface;
+import cn.whiteg.mmocore.common.CommandInterface;
 import cn.whiteg.mmocore.MMOCore;
 import cn.whiteg.mmocore.util.YamlUtils;
 import cn.whiteg.moetp.utils.EntityTpUtils;

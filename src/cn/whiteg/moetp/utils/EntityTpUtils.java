@@ -11,6 +11,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -142,7 +143,7 @@ public class EntityTpUtils {
         player.closeInventory();
         player.setFallDistance(0F);
         forgeStopRide(player);
-        return player.teleport(loc);
+        return player.teleport(loc,PlayerTeleportEvent.TeleportCause.PLUGIN);
     }
 
     public static boolean loadChunk(World world,int x,int z) {
@@ -251,5 +252,18 @@ public class EntityTpUtils {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void enderTeleportTo(Entity entity,Location loc) {
+        if (loc.getWorld() != entity.getWorld()){
+            throw new IllegalArgumentException("Cannot measure distance between " + entity.getWorld().getName() + " and " + loc.getWorld().getName());
+        }
+        net.minecraft.server.v1_15_R1.Entity ne = ((CraftEntity) entity).getHandle();
+        ne.enderTeleportTo(loc.getX(),loc.getY(),loc.getZ());
+    }
+
+    public static void enderTeleportTo(Entity entity,double x,double y,double z) {
+        net.minecraft.server.v1_15_R1.Entity ne = ((CraftEntity) entity).getHandle();
+        ne.enderTeleportTo(x,y,z);
     }
 }

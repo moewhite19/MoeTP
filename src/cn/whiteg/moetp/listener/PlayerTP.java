@@ -7,14 +7,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 public class PlayerTP implements Listener {
-    final private TeleportCause[] at = {TeleportCause.UNKNOWN,TeleportCause.COMMAND,TeleportCause.PLUGIN,TeleportCause.SPECTATE};
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void PlayerOnTP(PlayerTeleportEvent event) {
-        if (!con(event.getCause())) return;
+//        if (!con(event.getCause())) return;
         Location from = event.getFrom();
         Location to = event.getTo();
         final double dis;
@@ -36,13 +34,6 @@ public class PlayerTP implements Listener {
         }
         PlayerFarTpEvent tpEvent = new PlayerFarTpEvent(event,dis);
         Bukkit.getPluginManager().callEvent(tpEvent);
-    }
-
-    private boolean con(TeleportCause cause) {
-        for (int i = 0; i < at.length; i++) {
-            if (at[i].equals(cause)) return true;
-        }
-        return false;
     }
 
     public void unreg() {

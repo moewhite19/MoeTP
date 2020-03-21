@@ -24,7 +24,7 @@ public class PlayerSpawnListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerQuit(PlayerQuitEvent event) {
         chan(event.getPlayer());
     }
