@@ -20,7 +20,7 @@ public class MoeTP extends PluginBase {
     public static Logger logger;
     public static MoeTP plugin;
     public CommandManage mainCommand;
-    private SubCommand subCommander;
+    private CommandManage.SubCommand subCommander;
     private Economy economy;
 
     public MoeTP() {
@@ -46,8 +46,11 @@ public class MoeTP extends PluginBase {
 //            wb.setCenter(world.getSpawnLocation());
         }
         mainCommand = new CommandManage();
-        getCommand("moetp").setExecutor(mainCommand);
-        subCommander = new SubCommand();
+        PluginCommand pc = getCommand("moetp");
+        if (pc != null){
+            pc.setExecutor(mainCommand);
+            pc.setTabCompleter(mainCommand);
+        }
         regListener(new PlayerTP());
         regListener(new PlayerFarTP());
 //        regEven(new rideTpListener());
@@ -56,7 +59,7 @@ public class MoeTP extends PluginBase {
         if (Setting.setRespawn) regListener(new PlayerReSpawnListener());
 //        regEven(new PlayerReSpawnListener());
         if (Setting.AUTO_SETFLY) regListener(new PlayerAutoSetFlyListener());
-        for (Map.Entry<String, CommandInterface> entry : mainCommand.CommandMap.entrySet()) {
+        for (Map.Entry<String, CommandInterface> entry : mainCommand.commandMap.entrySet()) {
             String cmd = entry.getKey();
             PluginCommand c = PluginUtil.getPluginCommanc(this,cmd);
             if (c != null){
