@@ -1,8 +1,8 @@
 package cn.whiteg.moetp.api;
 
 import cn.whiteg.mmocore.container.PlayerReqest;
+import cn.whiteg.moetp.MoeTP;
 import cn.whiteg.moetp.utils.EntityTpUtils;
-import cn.whiteg.rpgArmour.RPGArmour;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -12,11 +12,11 @@ public class TpaReqest extends PlayerReqest {
     }
 
     @Override
-    public void acceptEvent() {
-        Bukkit.getScheduler().runTaskLater(RPGArmour.plugin,() -> {
-            EntityTpUtils.PlayerTP(getSender(),getPlayer().getLocation());
+    public void onAccept() {
+        Bukkit.getScheduler().runTaskLater(MoeTP.plugin,() -> {
+            if (getSender().isOnline() && getPlayer().isOnline())
+                EntityTpUtils.PlayerTP(getSender(),getPlayer().getLocation());
         },40);
-//                    p2.sendMessage("§b正在传送至" + p1.getDisplayName());
         getPlayer().sendMessage(getPlayer().getDisplayName() + "§b已接受传送请求");
         getSender().sendTitle("§b将会为你准备传送","§f请站在原地不要走动",10,30,10);
     }

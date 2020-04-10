@@ -50,6 +50,10 @@ public class DelayTp {
                  */
                 @Override
                 public void run() {
+                    if (!player.isOnline()){
+                        cancel();
+                        return;
+                    }
                     if (!check()){
                         close();
                         if (callback != null)

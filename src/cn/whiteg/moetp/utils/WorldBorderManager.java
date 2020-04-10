@@ -7,12 +7,11 @@ import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.Set;
-
 public class WorldBorderManager {
-    public static void set(){
+    public static void set() {
+        if (Setting.worldborder == null) return;
         ConfigurationSection worlds = Setting.worldborder.getConfigurationSection("worlds");
-        if(worlds!=null){
+        if (worlds != null){
             for (String key : worlds.getKeys(false)) {
                 World world = Bukkit.getWorld(key);
                 if (world == null){
@@ -20,7 +19,7 @@ public class WorldBorderManager {
                     continue;
                 }
                 ConfigurationSection sc = worlds.getConfigurationSection(key);
-                if (sc == null) {
+                if (sc == null){
                     MoeTP.logger.warning("无效世界配置: " + key);
                     continue;
                 }

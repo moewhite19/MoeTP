@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 public class PlayerTP implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void PlayerOnTP(PlayerTeleportEvent event) {
+    public void onPlayerTp(PlayerTeleportEvent event) {
 //        if (!con(event.getCause())) return;
         Location from = event.getFrom();
         Location to = event.getTo();

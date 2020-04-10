@@ -64,12 +64,12 @@ public class PlayerFarTP implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void tp(PlayerFarTpEvent event) {
+    public void onFarTp(PlayerFarTpEvent event) {
         if (event.getCause() != PlayerTeleportEvent.TeleportCause.PLUGIN) return;
         if (hasDec(event.getTo(),event.getFrom())) return;
         final Player p = event.getPlayer();
         final boolean isNoCd = p.getName().equals(EntityTpUtils.noCdPlayer);
-        if (isNoCd || event.getTo().getWorld().isChunkLoaded(event.getTo().getBlockX() >> 4,event.getTo().getBlockZ() >> 4)){
+        if (isNoCd || (Setting.ignoreLoadedChunk && event.getTo().getWorld().isChunkLoaded(event.getTo().getBlockX() >> 4,event.getTo().getBlockZ() >> 4))){
             EntityTpUtils.noCdPlayer = "";
         } else {
             final String tcn = "§3传送";

@@ -43,7 +43,6 @@ public class EntityTpUtils {
     public static void PlayerTpNoCd(Player p,Location loc) {
         noCdPlayer = p.getName().intern();
         p.teleport(loc);
-
     }
 
     public static boolean PlayerTP(Player p,Location loc) {
@@ -67,74 +66,11 @@ public class EntityTpUtils {
             noBackPlayer = p.getName().intern();
         }
 
-        //if (!p.isEmpty() || p.getVehicle() != null) return RideTP(p,loc);
-        if (Setting.DelayTpTime > 0){
+        if (Setting.DelayTpTime > 0 && !p.hasPermission("mmo.tpnocd")){
             DelayTp.PlayerTp(p,loc,Setting.DelayTpTime);
         } else {
-            p.eject();
             return PlayerOnceTp(p,loc);
         }
-/*
-        final byte[] con = {1}; BukkitRunnable br = new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (con[0] == 1){
-                    Chunk chunk = loc.getWorld().getChunkAt(loc);
-                    if (!chunk.isLoaded()){
-                        chunk.load();
-                    }
-                } else {
-                    byte r = con[0];
-                    p.sendMessage("正在加载区块 " + r);
-                    byte sta = 0;
-                    Chunk c = loc.getChunk();
-                    while (sta <= 3) {
-                        if (sta == 0){
-                            int x = c.getX() - r;
-                            int z = c.getZ() + r;
-                            while (x < c.getX() + r) {
-                                loadChunk(loc.getWorld(),x,z);
-                                x++;
-                            }
-                        } else if (sta == 1){
-                            int x = c.getX() - r;
-                            int z = c.getZ() - r;
-                            while (x < c.getX() + r) {
-                                loadChunk(loc.getWorld(),x,z);
-                                x++;
-                            }
-                        } else if (sta == 2){
-                            int x = c.getX() - r;
-                            int z = c.getZ() - r;
-                            while (z < c.getZ() + r) {
-                                loadChunk(loc.getWorld(),x,z);
-                                z++;
-                            }
-                        } else if (sta == 3){
-                            int x = c.getX() + r;
-                            int z = c.getZ() - r;
-                            while (z < c.getZ() + r) {
-                                loadChunk(loc.getWorld(),x,z);
-                                z++;
-                            }
-                        } else {
-                            break;
-                        }
-                        sta++;
-                    }
-                }
-                if (con[0] > 5){
-                    Chunk chunk = loc.getChunk();
-                    if (chunk.isLoaded()){
-                        p.sendMessage("区块已预加载");
-                    }
-                    p.teleport(loc,PlayerTeleportEvent.TeleportCause.ENDER_PEARL);
-                    cancel();
-                }
-                con[0]++;
-            }
-        };
-        br.runTaskTimer(MoeTP.plugin,10,10);*/
         return true;
     }
 
@@ -143,6 +79,10 @@ public class EntityTpUtils {
         player.closeInventory();
         player.setFallDistance(0F);
         forgeStopRide(player);
+        if (Setting.teleportAsync){
+            player.teleportAsync(loc,PlayerTeleportEvent.TeleportCause.PLUGIN);
+            return true;
+        }
         return player.teleport(loc,PlayerTeleportEvent.TeleportCause.PLUGIN);
     }
 
@@ -196,29 +136,6 @@ public class EntityTpUtils {
             }
         }.runTaskTimer(MoeTP.plugin,2,2);
         if (Setting.DEBUG) entity.sendMessage(el.toString());
-/*        if (entity.getPassengers() != null){
-            List<Entity> toplist = new ArrayList<>();
-            Entity end = RideManage.getEntityTopList(entity,toplist);
-            if (toplist.size() == 1){
-                end.teleport(loc);
-                Bukkit.getScheduler().runTask(MoeTP.plugin,() -> {
-                    entity.teleport(loc);
-                    end.addPassenger(entity);
-                });
-                return true;
-            } else {
-                return false;
-            }
-        }
-        if (v == null || v instanceof Player){
-            entity.teleport(loc);
-            return true;
-        } else {
-            entity.teleport(loc);
-            v.teleport(loc);
-            RideManage.Ride(entity,v);
-            return RideTP(v,loc);
-        }*/
         return true;
     }
 

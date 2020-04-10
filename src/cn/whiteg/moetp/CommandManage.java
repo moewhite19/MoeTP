@@ -9,7 +9,7 @@ import java.util.*;
 
 public class CommandManage extends CommandInterface {
     public final SubCommand subCommand = new SubCommand();
-    public List<String> AllCmd = Arrays.asList("reload","back","spawn","setspawn","warp","setwarp","rmwarp","tpa","tpo","tpoall","tpohere","tpahere","tpall","tpaall","home","sethome","rmhome","fly","speed","ohome","top");
+    public List<String> AllCmd = Arrays.asList("reload","back","spawn","setspawn","warp","setwarp","rmwarp","tpa","tpo","tpoall","tpohere","tpahere","tpaall","home","sethome","rmhome","fly","speed","ohome","top");
     public Map<String, CommandInterface> commandMap = new HashMap<>(AllCmd.size());
 
     public CommandManage() {

@@ -3,6 +3,7 @@ package cn.whiteg.moetp.commands;
 import cn.whiteg.mmocore.common.CommandInterface;
 import cn.whiteg.moetp.utils.EntityTpUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,11 +18,12 @@ public class tpoall extends CommandInterface {
         if (args.length == 1 && sender instanceof Player){
             if (sender.hasPermission("mmo.tpohere")){
                 Player p1 = (Player) sender;
-                p1.sendMessage("§b传送所以人");
+                p1.sendMessage("§b将所有人传送过来");
+                Location loc = p1.getLocation();
                 for (Player p2 : Bukkit.getOnlinePlayers()) {
                     if (p1 == p2) continue;
-                    EntityTpUtils.PlayerOnceTp(p2,p1.getLocation());
-                    p2.sendMessage(p1.getDisplayName() + "§b正在传送");
+                    EntityTpUtils.PlayerOnceTp(p2,loc);
+//                    p2.sendMessage(p1.getDisplayName() + "§b正在传送");
                 }
             }
         } else {

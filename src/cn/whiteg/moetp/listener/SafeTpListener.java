@@ -19,9 +19,8 @@ public class SafeTpListener implements Listener {
         final WorldBorder wb = bw.getWorldBorder();
         bl.add(wb.getCenter());
         if (Math.abs(bl.getX()) * 2 > wb.getSize() || Math.abs(bl.getZ()) * 2 > wb.getSize()){
-            event.getPlayer().sendMessage("你无法传送到边界外");
+            event.getPlayer().sendMessage("§b你无法传送到边界外");
             event.setCancelled(true);
-
             return;
         }
         //防地狱基岩上

@@ -10,7 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-public class rideTpListener implements Listener {
+public class RideTpListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onFarTP(PlayerFarTpEvent event) {
         final Player p = event.getPlayer();

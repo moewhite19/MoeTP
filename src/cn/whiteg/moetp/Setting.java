@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 public class Setting {
-    final private static int CONFIGVER = 7;
+    final private static int CONFIGVER = 9;
     public static String REQUSET_SOUND;
     public static boolean DEBUG;
     public static List<String> subCommands;
@@ -26,6 +26,9 @@ public class Setting {
     public static double deductMoneyRate = 0.0001D;
     public static double rcoolDownRate = 2;
     public static int DelayTpTime = 0;
+    public static boolean ignoreLoadedChunk = true;
+    public static boolean outOfBorder = true;
+    public static boolean teleportAsync = false;
 
     public static void reload() {
 
@@ -61,7 +64,9 @@ public class Setting {
         deductMoneyRate = config.getDouble("deductMoneyRate",deductMoneyRate);
         rcoolDownRate = config.getDouble("rcoolDownRate",rcoolDownRate);
         DelayTpTime = config.getInt("DelayTpTime",DelayTpTime);
-
+        ignoreLoadedChunk = config.getBoolean("ignoreLoadedChunk",ignoreLoadedChunk);
+        outOfBorder = config.getBoolean("outOfBorder",outOfBorder);
+        teleportAsync = config.getBoolean("teleportAsync",teleportAsync);
 
         //读取warp.yml
         file = new File(MoeTP.plugin.getDataFolder(),"warps.yml");
@@ -75,12 +80,8 @@ public class Setting {
         if (file.exists()){
             worldborder = YamlConfiguration.loadConfiguration(file);
         } else {
-            worldborder = new YamlConfiguration();
-            try{
-                worldborder.save(file);
-            }catch (IOException e){
-                e.printStackTrace();
-            }
+            worldborder = null;
+            MoeTP.plugin.saveResource("worldborder.yml",false);
         }
     }
 

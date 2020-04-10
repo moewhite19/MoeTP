@@ -49,8 +49,8 @@ public class MoeTP extends PluginBase {
         }
         regListener(new PlayerTP());
         regListener(new PlayerFarTP());
-//        regEven(new rideTpListener());
-        regListener(new SafeTpListener());
+//        regEven(new RideTpListener());
+        if (Setting.outOfBorder) regListener(new SafeTpListener());
         if (Setting.joinSpawn) regListener(new PlayerSpawnListener());
         if (Setting.setRespawn) regListener(new PlayerReSpawnListener());
 //        regEven(new PlayerReSpawnListener());
@@ -77,7 +77,7 @@ public class MoeTP extends PluginBase {
 
     public void onReload() {
         logger.info("--开始重载--");
-        reload();
+        Setting.reload();
         WorldBorderManager.set();
         logger.info("--重载完成--");
     }

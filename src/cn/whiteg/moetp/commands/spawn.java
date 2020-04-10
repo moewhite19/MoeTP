@@ -24,7 +24,7 @@ public class spawn extends CommandInterface {
                 return true;
             }
         } else if (args.length == 2){
-            if (sender.hasPermission("mmo.tp.other")){
+            if (sender.hasPermission("mmo.onFarTp.other")){
                 final Player player = Bukkit.getPlayer(args[1]);
                 if (player == null){
                     sender.sendMessage("§b找不到玩家");
