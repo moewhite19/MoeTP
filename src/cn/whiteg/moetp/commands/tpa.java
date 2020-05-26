@@ -17,15 +17,15 @@ public class tpa extends CommandInterface {
     public boolean onCommand(CommandSender sender,Command cmd,String label,String[] args) {
         if (args.length == 2 && sender instanceof Player){
             if (sender.hasPermission("mmo.tpa")){
-                final Player p1 = (Player) sender;
-                final Player p2 = Bukkit.getPlayer(args[1]);
-                if (p2 == null){
+                final Player send = (Player) sender;
+                final Player p = Bukkit.getPlayer(args[1]);
+                if (p == null){
                     sender.sendMessage("§b找不到玩家");
                     return true;
                 }
-                if (p1 == p2) return true;
-                final PlayerReqest reqest = new TpaReqest(p2,p1);
-                reqest.send();
+                if (send == p) return true;
+                final PlayerReqest reqest = new TpaReqest(send);
+                reqest.sendTo(p);
             }
         } else {
             sender.sendMessage("§a/tpa <玩家id>§b请求传送至玩家");

@@ -18,10 +18,7 @@ public class tpaall extends CommandInterface {
             if (sender.hasPermission("mmo.tpaall")){
                 Player p1 = (Player) sender;
                 sender.sendMessage("§b给所有玩家发送传送请求");
-                for (Player p2 : Bukkit.getOnlinePlayers()) {
-                    if (p1 == p2) continue;
-                    new TpahereReqest(p2,p1).send();
-                }
+                new TpahereReqest(p1).sendAll();
             } else {
                 sender.sendMessage("§b阁下没有权限使用这个指令");
             }

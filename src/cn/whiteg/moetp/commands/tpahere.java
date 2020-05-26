@@ -25,7 +25,7 @@ public class tpahere extends CommandInterface {
                 }
                 if (p1 == p2) return true;
                 final Location loc = ((Player) sender).getLocation();
-                new TpahereReqest(p2,p1).send();
+                new TpahereReqest(p1).sendTo(p2);
 //                String confirmID = "tpahere@" + sender.getName();
 //                TextComponent a0 = new TextComponent(" §f" + p1.getDisplayName());
 //                a0.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder(p1.getDisplayName()).append("§r\n位置: " + LocationUtils.LocationUtils(p1.getLocation())).create()));
