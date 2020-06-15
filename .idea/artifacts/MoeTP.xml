@@ -3,8 +3,6 @@
     <output-path>$PROJECT_DIR$/</output-path>
     <root id="archive" name="MoeTP.jar">
       <element id="module-output" name="MoeTP" />
-      <element id="file-copy" path="$PROJECT_DIR$/config.yml" />
-      <element id="file-copy" path="$PROJECT_DIR$/plugin.yml" />
     </root>
   </artifact>
 </component>

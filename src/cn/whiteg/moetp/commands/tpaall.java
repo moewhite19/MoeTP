@@ -17,13 +17,13 @@ public class tpaall extends CommandInterface {
         if (args.length == 1 && sender instanceof Player){
             if (sender.hasPermission("mmo.tpaall")){
                 Player p1 = (Player) sender;
-                sender.sendMessage("§b给所有玩家发送传送请求");
+                sender.sendMessage(" §b给所有玩家发送传送请求");
                 new TpahereReqest(p1).sendAll();
             } else {
                 sender.sendMessage("§b阁下没有权限使用这个指令");
             }
         } else {
-            sender.sendMessage("§a/tpaall§b请求所有玩家传送至阁下");
+            sender.sendMessage(" §a/tpaall§b请求所有玩家传送至阁下");
         }
         return false;
     }
