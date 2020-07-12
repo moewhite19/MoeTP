@@ -26,6 +26,7 @@ public class EntityTpUtils {
     public final static Field vehicleField;
     public static String noCdPlayer = "";
     public static String noBackPlayer = "";
+    public final static String tag = "§3传送";
 
     static {
         Field f = null;
@@ -52,18 +53,21 @@ public class EntityTpUtils {
     }
 
     public static boolean PlayerTP(Player p,Location loc,boolean checkCd,boolean saveBack) {
+        //检查cd
         if (checkCd){
-            if (iscd(p)){
+            if (isTeleportCoolDown(p)){
                 p.sendMessage("§b传送还在冷却中");
                 return false;
             }
         } else {
             noCdPlayer = p.getName().intern();
         }
+        //储存back
         if (!saveBack){
             noBackPlayer = p.getName().intern();
         }
 
+        //如果玩家拥有权限直接传送，无需等待
         if (Setting.DelayTpTime > 0 && !p.hasPermission("mmo.tpdelay")){
             DelayTp.PlayerTp(p,loc,Setting.DelayTpTime);
         } else {
@@ -91,8 +95,19 @@ public class EntityTpUtils {
 
     }
 
-    public static boolean iscd(Player p) {
-        return !CoolDownUtil.hasCd(p.getName(),"§3传送");
+    //检查传送是否在cd
+    public static boolean isTeleportCoolDown(Player p) {
+        if (p.hasPermission("mmo.tpnocd")) return false;
+        return !CoolDownUtil.hasCd(p.getName(),tag);
+    }
+
+    //设置传送cd
+    public static void setTeleportCoolDown(Player p,int s) {
+        CoolDownUtil.setCds(p.getName(),tag,s);
+    }
+
+    public static String getCoolDownTag() {
+        return tag;
     }
 
     public static boolean RideTP(Entity entity,Location loc) {
@@ -113,14 +128,12 @@ public class EntityTpUtils {
         }
         new BukkitRunnable() {
             int i = 0;
-
             @Override
             public void run() {
                 if (i < el.size()){
                     el.get(i).teleport(loc);
                     i++;
                 } else {
-
                     for (int i = el.size() - 2; i >= 0; i--) {
                         el.get(i + 1).addPassenger(el.get(i));
                     }

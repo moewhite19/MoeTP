@@ -72,10 +72,9 @@ public class PlayerFarTP implements Listener {
         if (isNoCd || (Setting.ignoreLoadedChunk && event.getTo().getWorld().isChunkLoaded(event.getTo().getBlockX() >> 4,event.getTo().getBlockZ() >> 4))){
             EntityTpUtils.noCdPlayer = "";
         } else {
-            final String tcn = "§3传送";
             final double distance = LocationUtils.LocationDistance(event.getFrom(),event.getTo());
-            if (!p.hasPermission("mmo.tpnocd") && !CoolDownUtil.hasCd(p.getName(),tcn)){
-                ActionBar.sendActionBar(p,"§3§l> §b阁下传送还在冷却中,下次充能完成还需要§f" + CoolDownUtil.getCds(p.getName(),tcn) + "§b秒 §3§l<");
+            if (EntityTpUtils.isTeleportCoolDown(p)){
+                ActionBar.sendActionBar(p,"§3§l> §b阁下传送还在冷却中,下次充能完成还需要§f" + CoolDownUtil.getCds(p.getName(),EntityTpUtils.getCoolDownTag()) + "§b秒 §3§l<");
                 event.setCancelled(true);
                 return;
             }
@@ -89,7 +88,8 @@ public class PlayerFarTP implements Listener {
                     return;
                 }
             }
-            if (Setting.rcoolDownRate > 0) CoolDownUtil.setCd(p.getName(),tcn,(int) (distance * Setting.rcoolDownRate));
+            if (Setting.rcoolDownRate > 0)
+                CoolDownUtil.setCd(p.getName(),EntityTpUtils.getCoolDownTag(),(int) (distance * Setting.rcoolDownRate));
         }
         setBackLoc(p);
 
