@@ -1,76 +1,43 @@
 package cn.whiteg.moetp.api;
 
 import cn.whiteg.moetp.MoeTP;
-import cn.whiteg.moetp.Setting;
 import cn.whiteg.moetp.utils.EntityTpUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class DelayTp {
-    static private Map<UUID, DelayTp> map = new HashMap<>();
-
+public class DelayTp extends BukkitRunnable {
+    private static final Map<UUID, DelayTp> map = new HashMap<>();
     final private Player player;
-    final private Location tloc;
-    final private Location sloc;
-    final private BukkitTask task;
+    final private Location todLoc;
+    final private Location startLoc;
     private final BossBar bossBar;
-    private int num;
-    private CallBack callback;
+    int pace = 0; //进度
+    private int preTime; //需要时间
+    private CallBack callback; //回调函数
 
     public DelayTp(Player player,Location loc,int deny) {
         this.player = player;
-        this.tloc = loc;
-        this.sloc = player.getLocation();
-        this.num = deny;
-        if (deny >= 1){
+        this.todLoc = loc;
+        this.startLoc = player.getLocation();
+        this.preTime = deny;
+        if (deny > 1){
             bossBar = Bukkit.createBossBar("§b传送准备",BarColor.WHITE,BarStyle.SOLID);
             bossBar.addPlayer(player);
             bossBar.setProgress(0);
-            task = new BukkitRunnable() {
-                /**
-                 * When an object implementing interface <code>Runnable</code> is used
-                 * to create a thread, starting the thread causes the object's
-                 * <code>run</code> method to be called in that separately executing
-                 * thread.
-                 * <p>
-                 * The general contract of the method <code>run</code> is that it may
-                 * take any action whatsoever.
-                 *
-                 * @see Thread#run()
-                 */
-                @Override
-                public void run() {
-                    if (!player.isOnline()){
-                        cancel();
-                        return;
-                    }
-                    if (!check()){
-                        close();
-                        if (callback != null)
-                            callback.onClose();
-                        return;
-                    }
-                    num--;
-                    if (num <= 0){
-                        onTP();
-                    } else {
-                        bossBar.setProgress(getProgress());
-                    }
-                }
-            }.runTaskTimer(MoeTP.plugin,20,20);
+            runTaskTimer(MoeTP.plugin,1,1);
         } else {
             EntityTpUtils.PlayerOnceTp(player,loc);
-            task = null;
             bossBar = null;
         }
     }
@@ -81,19 +48,76 @@ public class DelayTp {
 
     public static DelayTp PlayerTp(Player player,Location loc,int dec) {
         DelayTp o = map.get(player.getUniqueId());
-        if (o != null) o.close();
-        o = new DelayTp(player,loc,dec);
+        if (o != null) o.onClose();
+        o = new DelayTp(player,loc,dec * 20);
         map.put(player.getUniqueId(),o);
         return o;
     }
 
+    @Override
+    public void run() {
+        if (!player.isOnline()){
+            cancel();
+            return;
+        }
+        if (!check()){
+            onClose();
+            if (callback != null)
+                callback.onClose();
+            return;
+        }
+        if (pace >= preTime){
+            onTeleport();
+        } else {
+            double range = 1.8D;
+            //前20Tick准备动画
+            if (pace >= 20){
+                //玩家位置动画
+                for (int i = 0; i <= 360; i += 45) {
+                    double radians = Math.toRadians(pace + i);
+                    Location playEffectLocation = startLoc.clone().add(range * Math.cos(radians),2D,range * Math.sin(radians));
+                    playEffectLocation.getWorld().spawnParticle(Particle.TOTEM,playEffectLocation,5,0,0,0,0.0D); //经验球
+                    //playEffectLocation.getWorld().spawnParticle(Particle.PORTAL,playEffectLocation,500,null);//末影珍珠效果
+                    //playEffectLocation.getWorld().spawnParticle(Particle.REDSTONE,playEffectLocation,5,0,0,0,0D, new Particle.DustOptions(Color.ORANGE, 2)); //红石自定义
+                }
+                //目标位置动画
+                for (int i = 0; i <= 360; i += 45) {
+                    double radians = Math.toRadians(pace + i);
+                    Location playEffectLocation = todLoc.clone().add(range * Math.cos(radians),1D,range * Math.sin(radians));
+                    playEffectLocation.getWorld().spawnParticle(Particle.REDSTONE,playEffectLocation,5,0,0,0,0D,new Particle.DustOptions(Color.NAVY,2)); //红石自定义
+                }
+            } else {
+                //玩家位置准备动画
+                for (int i = 0; i <= 360; i += 45) {
+                    double radians = Math.toRadians(pace + i);
+                    double hig = pace * 0.1;
+                    Location playEffectLocation = startLoc.clone().add(range * Math.cos(radians),hig,range * Math.sin(radians));
+                    playEffectLocation.getWorld().spawnParticle(Particle.TOTEM,playEffectLocation,5,0,0,0,0.0D); //经验球
+                }
+
+                //目标位置准备动画
+                for (int i = 0; i <= 360; i += 45) {
+                    double radians = Math.toRadians(pace + i);
+                    double hig = pace * 0.05;
+                    Location playEffectLocation = todLoc.clone().add(range * Math.cos(radians),hig,range * Math.sin(radians));
+                    playEffectLocation.getWorld().spawnParticle(Particle.REDSTONE,playEffectLocation,5,0,0,0,0D,new Particle.DustOptions(Color.ORANGE,1)); //红石自定义
+                }
+
+            }
+            pace++;
+            bossBar.setProgress(getProgress());
+        }
+
+
+    }
+
     public float getProgress() {
-        return 1F - ((float) num) / Setting.DelayTpTime;
+        return ((float) pace) / preTime;
     }
 
     public boolean check() {
         try{
-            if (!player.isOnline() || player.getLocation().distance(sloc) > 0.5){
+            if (!player.isOnline() || player.getLocation().distance(startLoc) > 0.5){
                 return false;
             }
         }catch (Exception ignored){
@@ -102,27 +126,33 @@ public class DelayTp {
         return true;
     }
 
-    public void onTP() {
+    public void onTeleport() {
+        cancel();
         player.eject();
         player.closeInventory();
-        final boolean status = player.teleport(tloc);
-        if (task != null){
-            task.cancel();
-            bossBar.removeAll();
+        final boolean status = player.teleport(todLoc);
+        bossBar.removeAll();
+
+        //传送完成后的的话
+        if (status){
+            startLoc.getWorld().spawnParticle(Particle.PORTAL,startLoc,500,null);//末影珍珠效果
+            todLoc.getWorld().spawnParticle(Particle.SPELL_WITCH,todLoc,500,null);//女巫效果
+        } else {
+            startLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,startLoc,500,null);//附魔台效果
+            todLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,todLoc,500,null);//附魔台效果
         }
-        map.remove(player.getUniqueId());
+
         if (callback != null){
-            callback.onDone(status);
+            callback.onTeleport(status);
         }
     }
 
-    public void close() {
+    public void onClose() {
+        cancel();
         player.sendMessage("§b传送已取消");
-        map.remove(player.getUniqueId());
-        if (task != null){
-            task.cancel();
-            bossBar.removeAll();
-        }
+        bossBar.removeAll();
+        startLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,startLoc,500,null);//附魔台效果
+        todLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,todLoc,500,null);//附魔台效果
         if (callback != null){
             callback.onClose();
         }
@@ -132,25 +162,21 @@ public class DelayTp {
         return player;
     }
 
-    public Location getTloc() {
-        return tloc;
+    public Location getTodLoc() {
+        return todLoc;
     }
 
-    public int getNum() {
-        return num;
+    public int getPreTime() {
+        return preTime;
     }
 
     public void setCallback(CallBack callback) {
         this.callback = callback;
     }
 
-    public abstract class CallBack {
-        public void onDone(boolean status) {
-
-        }
-
-        public void onClose() {
-
-        }
+    @Override
+    public synchronized void cancel() throws IllegalStateException {
+        map.remove(player.getUniqueId());
+        super.cancel();
     }
 }

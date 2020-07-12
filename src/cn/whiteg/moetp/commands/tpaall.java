@@ -19,6 +19,7 @@ public class tpaall extends CommandInterface {
                 Player p1 = (Player) sender;
                 sender.sendMessage(" §b给所有玩家发送传送请求");
                 new TpahereReqest(p1).sendAll();
+                return true;
             } else {
                 sender.sendMessage("§b阁下没有权限使用这个指令");
             }

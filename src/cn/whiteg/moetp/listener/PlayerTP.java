@@ -18,16 +18,6 @@ public class PlayerTP implements Listener {
         final double dis;
         if (from.getWorld() == to.getWorld()){
             dis = from.distance(to);
-//            if (from.getX() > to.getX()){
-//                v += from.getX() - to.getX();
-//            } else {
-//                v += to.getX() - from.getX();
-//            }
-//            if (from.getZ() > to.getZ()){
-//                v += from.getZ() - to.getZ();
-//            } else {
-//                v += to.getZ() - from.getZ();
-//            }
             if (dis < 1) return;
         } else {
             dis = Double.MAX_VALUE;

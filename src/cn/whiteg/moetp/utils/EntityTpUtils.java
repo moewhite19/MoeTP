@@ -3,10 +3,11 @@ package cn.whiteg.moetp.utils;
 import cn.whiteg.moetp.MoeTP;
 import cn.whiteg.moetp.Setting;
 import cn.whiteg.moetp.api.DelayTp;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_16_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -32,7 +33,7 @@ public class EntityTpUtils {
     static {
         Field f = null;
         try{
-            f = net.minecraft.server.v1_15_R1.Entity.class.getDeclaredField("vehicle");
+            f = net.minecraft.server.v1_16_R1.Entity.class.getDeclaredField("vehicle");
             f.setAccessible(true);
         }catch (NoSuchFieldException e){
             e.printStackTrace();
@@ -74,15 +75,16 @@ public class EntityTpUtils {
         return true;
     }
 
+    //立即传送玩家
     public static boolean PlayerOnceTp(Player player,Location loc) {
         player.eject();
         player.closeInventory();
         player.setFallDistance(0F);
         forgeStopRide(player);
-        if (Setting.teleportAsync){
-            player.teleportAsync(loc,PlayerTeleportEvent.TeleportCause.PLUGIN);
-            return true;
-        }
+//        if (Setting.teleportAsync){ //Paper方法,异步tp
+//            player.teleportAsync(loc,PlayerTeleportEvent.TeleportCause.PLUGIN);
+//            return true;
+//        }
         return player.teleport(loc,PlayerTeleportEvent.TeleportCause.PLUGIN);
     }
 
@@ -118,7 +120,7 @@ public class EntityTpUtils {
         for (int i = 0; i < el.size(); i++) {
             el.get(i).teleport(loc);
         }
-        BukkitTask br = new BukkitRunnable() {
+        new BukkitRunnable() {
             int i = 0;
 
             @Override
@@ -152,16 +154,15 @@ public class EntityTpUtils {
     }
 
     public static void forgeStopRide(Entity entity) {
-        net.minecraft.server.v1_15_R1.Entity ne = ((CraftEntity) entity).getHandle();
-        net.minecraft.server.v1_15_R1.Entity nv = ne.getVehicle();
+        net.minecraft.server.v1_16_R1.Entity ne = ((CraftEntity) entity).getHandle();
+        net.minecraft.server.v1_16_R1.Entity nv = ne.getVehicle();
         if (nv != null){
             Entity v = entity.getVehicle();
             if (v instanceof Vehicle && entity instanceof LivingEntity){
                 VehicleExitEvent ev = new VehicleExitEvent((Vehicle) v,(LivingEntity) entity);
-                ev.callEvent();
             }
             EntityDismountEvent ev = new EntityDismountEvent(entity,v);
-            ev.callEvent();
+            Bukkit.getPluginManager().callEvent(ev);
             ne.getVehicle().passengers.remove(ne);
             try{
                 vehicleField.set(ne,null);
@@ -175,12 +176,12 @@ public class EntityTpUtils {
         if (loc.getWorld() != entity.getWorld()){
             throw new IllegalArgumentException("Cannot measure distance between " + entity.getWorld().getName() + " and " + loc.getWorld().getName());
         }
-        net.minecraft.server.v1_15_R1.Entity ne = ((CraftEntity) entity).getHandle();
+        net.minecraft.server.v1_16_R1.Entity ne = ((CraftEntity) entity).getHandle();
         ne.enderTeleportTo(loc.getX(),loc.getY(),loc.getZ());
     }
 
     public static void enderTeleportTo(Entity entity,double x,double y,double z) {
-        net.minecraft.server.v1_15_R1.Entity ne = ((CraftEntity) entity).getHandle();
+        net.minecraft.server.v1_16_R1.Entity ne = ((CraftEntity) entity).getHandle();
         ne.enderTeleportTo(x,y,z);
     }
 }
