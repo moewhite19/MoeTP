@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="MoeInfo">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../MoeInfo/MoeInfo.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
