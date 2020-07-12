@@ -1,5 +1,6 @@
 package cn.whiteg.moetp.api;
 
+import cn.whiteg.mmocore.util.CoolDownUtil;
 import cn.whiteg.moetp.MoeTP;
 import cn.whiteg.moetp.utils.EntityTpUtils;
 import org.bukkit.Bukkit;
@@ -28,17 +29,18 @@ public class DelayTp extends BukkitRunnable {
     private int preTime; //需要时间
     private CallBack callback; //回调函数
     private double toLocEffY = 0.5D; //目标位置特效第二层
+    private int period = 2;
 
     public DelayTp(Player player,Location loc,int deny) {
         this.player = player;
         this.todLoc = loc;
         this.startLoc = player.getLocation();
-        this.preTime = deny;
+        this.preTime = deny + 20;
         if (deny > 1){
             bossBar = Bukkit.createBossBar("§b传送准备",BarColor.WHITE,BarStyle.SOLID);
             bossBar.addPlayer(player);
             bossBar.setProgress(0);
-            runTaskTimer(MoeTP.plugin,1,1);
+            runTaskTimer(MoeTP.plugin,0,period);
         } else {
             EntityTpUtils.PlayerOnceTp(player,loc);
             bossBar = null;
@@ -50,7 +52,7 @@ public class DelayTp extends BukkitRunnable {
     }
 
     public static DelayTp PlayerTp(Player player,Location loc,int dec) {
-        DelayTp o = map.get(player.getUniqueId());
+        DelayTp o = map.remove(player.getUniqueId());
         if (o != null) o.onClose();
         o = new DelayTp(player,loc,dec * 20);
         map.put(player.getUniqueId(),o);
@@ -75,7 +77,7 @@ public class DelayTp extends BukkitRunnable {
             //前10tick准备动画
             if (pace < 10){
                 //玩家位置准备动画
-                range += 0.08D;
+                range += 0.08D * period;
                 for (int i = 0; i < 360; i += 45) {
                     double radians = Math.toRadians((pace * 4) + i);
                     double hig = pace * 0.2;
@@ -114,7 +116,7 @@ public class DelayTp extends BukkitRunnable {
                     playEffectLocation.getWorld().spawnParticle(Particle.REDSTONE,playEffectLocation,5,0,0,0,0D,new Particle.DustOptions(Color.FUCHSIA,2)); //红石自定义
                 }
                 //目标位置第二层
-                if (pace > 13 && pace < 25) toLocEffY += 0.08D;
+                if (pace > 13 && pace < 25) toLocEffY += 0.08D * period;
                 for (int i = 45; i <= 360; i += 90) {
                     double radians = Math.toRadians((pace * 4) + i);
                     Location playEffectLocation = todLoc.clone().add(range * Math.cos(radians),toLocEffY,range * Math.sin(radians));
@@ -122,7 +124,7 @@ public class DelayTp extends BukkitRunnable {
                 }
             }
 
-            pace++;
+            pace += period;
             bossBar.setProgress(getProgress());
         }
 
@@ -169,6 +171,7 @@ public class DelayTp extends BukkitRunnable {
     public void onClose() {
         cancel();
         player.sendMessage("§b传送已取消");
+        CoolDownUtil.setCds(player.getName(),"§3传送",5);
         bossBar.removeAll();
         Vector off = new Vector(0,0.5,0);
         startLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,startLoc.clone().add(off),600,null);//附魔台效果

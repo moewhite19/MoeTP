@@ -1,5 +1,6 @@
 package cn.whiteg.moetp.utils;
 
+import cn.whiteg.mmocore.util.CoolDownUtil;
 import cn.whiteg.moetp.MoeTP;
 import cn.whiteg.moetp.Setting;
 import cn.whiteg.moetp.api.DelayTp;
@@ -15,18 +16,14 @@ import org.bukkit.entity.Vehicle;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 public class EntityTpUtils {
     public final static Field vehicleField;
-    public static Map<String, Long> tpTime = new WeakHashMap<>();
     public static String noCdPlayer = "";
     public static String noBackPlayer = "";
 
@@ -67,7 +64,7 @@ public class EntityTpUtils {
             noBackPlayer = p.getName().intern();
         }
 
-        if (Setting.DelayTpTime > 0 && !p.hasPermission("mmo.tpnocd")){
+        if (Setting.DelayTpTime > 0 && !p.hasPermission("mmo.tpdelay")){
             DelayTp.PlayerTp(p,loc,Setting.DelayTpTime);
         } else {
             return PlayerOnceTp(p,loc);
@@ -94,14 +91,8 @@ public class EntityTpUtils {
 
     }
 
-    public static void updatacd(Player p) {
-        tpTime.put(new String(p.getName()),System.currentTimeMillis());
-    }
-
     public static boolean iscd(Player p) {
-        long t = tpTime.getOrDefault(p.getName(),0L);
-        if (t == 0L) return false;
-        return System.currentTimeMillis() - t < Setting.tpcd;
+        return !CoolDownUtil.hasCd(p.getName(),"§3传送");
     }
 
     public static boolean RideTP(Entity entity,Location loc) {

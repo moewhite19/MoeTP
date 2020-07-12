@@ -4,15 +4,14 @@ import org.bukkit.Location;
 
 public class LocationUtils {
     public static String LocationToString(Location location) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("§b世界: §f");
-        sb.append(location.getWorld().getName());
-        sb.append(" §bX:§f" + location.getBlockX());
-        sb.append(" §bY:§f" + location.getBlockY());
-        sb.append(" §bZ:§f" + location.getBlockZ());
-        return sb.toString();
+        return new StringBuilder().append("§b世界: §f").append(location.getWorld().getName())
+                .append(" §bX:§f").append(location.getBlockX())
+                .append(" §bY:§f").append(location.getBlockY())
+                .append(" §bZ:§f").append(location.getBlockZ())
+                .toString();
     }
 
+    //获取两个位置的距离，如果不在一个世界则从目标位置的传送点开始算
     public static double LocationDistance(Location startLoc,Location endLoc) {
         try{
             return startLoc.distance(endLoc);

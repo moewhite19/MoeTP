@@ -73,14 +73,14 @@ public class PlayerFarTP implements Listener {
             EntityTpUtils.noCdPlayer = "";
         } else {
             final String tcn = "§3传送";
-            final double d = LocationUtils.LocationDistance(event.getFrom(),event.getTo());
+            final double distance = LocationUtils.LocationDistance(event.getFrom(),event.getTo());
             if (!p.hasPermission("mmo.tpnocd") && !CoolDownUtil.hasCd(p.getName(),tcn)){
                 ActionBar.sendActionBar(p,"§3§l> §b阁下传送还在冷却中,下次充能完成还需要§f" + CoolDownUtil.getCds(p.getName(),tcn) + "§b秒 §3§l<");
                 event.setCancelled(true);
                 return;
             }
             if (Setting.deductMoneyRate > 0){
-                EconomyResponse status = MoeTP.plugin.getEconomy().withdrawPlayer(event.getPlayer(),d * Setting.deductMoneyRate);
+                EconomyResponse status = MoeTP.plugin.getEconomy().withdrawPlayer(event.getPlayer(),distance * Setting.deductMoneyRate);
                 if (status.type == EconomyResponse.ResponseType.SUCCESS){
                     p.sendMessage("§b已消费§f" + status.amount + MoeTP.plugin.getEconomy().currencyNamePlural() + "§b用于传送");
                 } else {
@@ -89,7 +89,7 @@ public class PlayerFarTP implements Listener {
                     return;
                 }
             }
-            if (Setting.rcoolDownRate > 0) CoolDownUtil.setCd(p.getName(),tcn,(int) (d * Setting.rcoolDownRate));
+            if (Setting.rcoolDownRate > 0) CoolDownUtil.setCd(p.getName(),tcn,(int) (distance * Setting.rcoolDownRate));
         }
         setBackLoc(p);
 
