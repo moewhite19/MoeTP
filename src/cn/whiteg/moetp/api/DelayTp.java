@@ -11,6 +11,7 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +24,10 @@ public class DelayTp extends BukkitRunnable {
     final private Location startLoc;
     private final BossBar bossBar;
     int pace = 0; //进度
+    double range = 0.3D; //范围
     private int preTime; //需要时间
     private CallBack callback; //回调函数
+    private double toLocEffY = 0.5D; //目标位置特效第二层
 
     public DelayTp(Player player,Location loc,int deny) {
         this.player = player;
@@ -69,41 +72,56 @@ public class DelayTp extends BukkitRunnable {
         if (pace >= preTime){
             onTeleport();
         } else {
-            double range = 1.8D;
-            //前20Tick准备动画
-            if (pace >= 20){
-                //玩家位置动画
-                for (int i = 0; i <= 360; i += 45) {
-                    double radians = Math.toRadians(pace + i);
-                    Location playEffectLocation = startLoc.clone().add(range * Math.cos(radians),2D,range * Math.sin(radians));
-                    playEffectLocation.getWorld().spawnParticle(Particle.TOTEM,playEffectLocation,5,0,0,0,0.0D); //经验球
-                    //playEffectLocation.getWorld().spawnParticle(Particle.PORTAL,playEffectLocation,500,null);//末影珍珠效果
-                    //playEffectLocation.getWorld().spawnParticle(Particle.REDSTONE,playEffectLocation,5,0,0,0,0D, new Particle.DustOptions(Color.ORANGE, 2)); //红石自定义
-                }
-                //目标位置动画
-                for (int i = 0; i <= 360; i += 45) {
-                    double radians = Math.toRadians(pace + i);
-                    Location playEffectLocation = todLoc.clone().add(range * Math.cos(radians),1D,range * Math.sin(radians));
-                    playEffectLocation.getWorld().spawnParticle(Particle.REDSTONE,playEffectLocation,5,0,0,0,0D,new Particle.DustOptions(Color.NAVY,2)); //红石自定义
-                }
-            } else {
+            //前10tick准备动画
+            if (pace < 10){
                 //玩家位置准备动画
-                for (int i = 0; i <= 360; i += 45) {
-                    double radians = Math.toRadians(pace + i);
-                    double hig = pace * 0.1;
+                range += 0.08D;
+                for (int i = 0; i < 360; i += 45) {
+                    double radians = Math.toRadians((pace * 4) + i);
+                    double hig = pace * 0.2;
                     Location playEffectLocation = startLoc.clone().add(range * Math.cos(radians),hig,range * Math.sin(radians));
                     playEffectLocation.getWorld().spawnParticle(Particle.TOTEM,playEffectLocation,5,0,0,0,0.0D); //经验球
                 }
 
                 //目标位置准备动画
-                for (int i = 0; i <= 360; i += 45) {
-                    double radians = Math.toRadians(pace + i);
-                    double hig = pace * 0.05;
+                for (int i = 0; i < 360; i += 45) {
+                    double radians = Math.toRadians((pace * 4) + i);
+                    double hig = pace * 0.1;
                     Location playEffectLocation = todLoc.clone().add(range * Math.cos(radians),hig,range * Math.sin(radians));
-                    playEffectLocation.getWorld().spawnParticle(Particle.REDSTONE,playEffectLocation,5,0,0,0,0D,new Particle.DustOptions(Color.ORANGE,1)); //红石自定义
+                    playEffectLocation.getWorld().spawnParticle(Particle.REDSTONE,playEffectLocation,5,0,0,0,0D,new Particle.DustOptions(Color.FUCHSIA,1)); //红石自定义
                 }
+            } else {
+                //玩家位置动画
+                for (int i = 0; i < 360; i += 45) {
+                    double radians = Math.toRadians((pace * 4) + i);
+                    Location playEffectLocation = startLoc.clone().add(range * Math.cos(radians),2D,range * Math.sin(radians));
+                    playEffectLocation.getWorld().spawnParticle(Particle.TOTEM,playEffectLocation,5,0,0,0,0.0D); //经验球
+                    //playEffectLocation.getWorld().spawnParticle(Particle.PORTAL,playEffectLocation,500,null);//末影珍珠效果
+                    //playEffectLocation.getWorld().spawnParticle(Particle.REDSTONE,playEffectLocation,5,0,0,0,0D, new Particle.DustOptions(Color.ORANGE, 2)); //红石自定义
+                }
+                //玩家位置反向动画
+//                for (int i = 45; i < 360; i += 90) {
+//                    double radians = Math.toRadians(~(pace * 4) - i);
+//                    Location playEffectLocation = startLoc.clone().add(range * Math.cos(radians),2D,range * Math.sin(radians));
+//                    playEffectLocation.getWorld().spawnParticle(Particle.TOTEM,playEffectLocation,5,0,0,0,0.0D); //经验球
+//                }
 
+
+                //目标位置动画
+                for (int i = 0; i <= 360; i += 90) {
+                    double radians = Math.toRadians((pace * 4) + i);
+                    Location playEffectLocation = todLoc.clone().add(range * Math.cos(radians),0.5D,range * Math.sin(radians));
+                    playEffectLocation.getWorld().spawnParticle(Particle.REDSTONE,playEffectLocation,5,0,0,0,0D,new Particle.DustOptions(Color.FUCHSIA,2)); //红石自定义
+                }
+                //目标位置第二层
+                if (pace > 13 && pace < 25) toLocEffY += 0.08D;
+                for (int i = 45; i <= 360; i += 90) {
+                    double radians = Math.toRadians((pace * 4) + i);
+                    Location playEffectLocation = todLoc.clone().add(range * Math.cos(radians),toLocEffY,range * Math.sin(radians));
+                    playEffectLocation.getWorld().spawnParticle(Particle.REDSTONE,playEffectLocation,5,0,0,0,0D,new Particle.DustOptions(Color.FUCHSIA,pace < 25 ? 1 : 2)); //红石自定义
+                }
             }
+
             pace++;
             bossBar.setProgress(getProgress());
         }
@@ -134,12 +152,13 @@ public class DelayTp extends BukkitRunnable {
         bossBar.removeAll();
 
         //传送完成后的的话
+        Vector off = new Vector(0,0.5,0);
         if (status){
-            startLoc.getWorld().spawnParticle(Particle.PORTAL,startLoc,500,null);//末影珍珠效果
-            todLoc.getWorld().spawnParticle(Particle.SPELL_WITCH,todLoc,500,null);//女巫效果
+            startLoc.getWorld().spawnParticle(Particle.PORTAL,startLoc.clone().add(off),600,null);//末影珍珠效果
+            todLoc.getWorld().spawnParticle(Particle.SPELL_WITCH,todLoc.clone().add(off),600,null);//女巫效果
         } else {
-            startLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,startLoc,500,null);//附魔台效果
-            todLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,todLoc,500,null);//附魔台效果
+            startLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,startLoc.clone().add(off),600,null);//附魔台效果
+            todLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,todLoc.clone().add(off),600,null);//附魔台效果
         }
 
         if (callback != null){
@@ -151,8 +170,9 @@ public class DelayTp extends BukkitRunnable {
         cancel();
         player.sendMessage("§b传送已取消");
         bossBar.removeAll();
-        startLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,startLoc,500,null);//附魔台效果
-        todLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,todLoc,500,null);//附魔台效果
+        Vector off = new Vector(0,0.5,0);
+        startLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,startLoc.clone().add(off),600,null);//附魔台效果
+        todLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,todLoc.clone().add(off),600,null);//附魔台效果
         if (callback != null){
             callback.onClose();
         }
