@@ -1,8 +1,11 @@
 package cn.whiteg.moetp;
 
-import cn.whiteg.mmocore.DataCon;
+import cn.whiteg.mmocore.sound.SingleSound;
+import cn.whiteg.mmocore.sound.Sound;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import cn.whiteg.mmocore.DataCon;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,8 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 public class Setting {
-    final private static int CONFIGVER = 9;
-    public static String REQUSET_SOUND;
+    final private static int CONFIGVER = 10;
     public static boolean DEBUG;
     public static List<String> subCommands;
     public static FileConfiguration warps;
@@ -29,6 +31,10 @@ public class Setting {
     public static boolean ignoreLoadedChunk = true;
     public static boolean outOfBorder = true;
     public static boolean teleportAsync = false;
+    public static boolean PlayParticle = false;
+    public static Sound START_SOUND = Sound.EMPTY;
+    public static Sound BREAK_SOUND = SingleSound.EMPTY;
+    public static Sound END_SOUND = SingleSound.EMPTY;
 
     public static void reload() {
 
@@ -57,16 +63,23 @@ public class Setting {
         PlayerMaxHomes = config.getInt("Player.MaxHomes",5);
         AUTO_SETFLY = config.getBoolean("AutoSetFly",false);
         FLY_SPEED = config.getDouble("FlySpeed",0.05);
-        REQUSET_SOUND = config.getString("Request_Sound","entity.player.levelup");
         tpcd = config.getInt("TpCd",5000);
         joinSpawn = config.getBoolean("joinSpawn",joinSpawn);
         setRespawn = config.getBoolean("setRespawn",setRespawn);
         deductMoneyRate = config.getDouble("deductMoneyRate",deductMoneyRate);
         rcoolDownRate = config.getDouble("rcoolDownRate",rcoolDownRate);
-        DelayTpTime = config.getInt("DelayTpTime",DelayTpTime);
         ignoreLoadedChunk = config.getBoolean("ignoreLoadedChunk",ignoreLoadedChunk);
         outOfBorder = config.getBoolean("outOfBorder",outOfBorder);
         teleportAsync = config.getBoolean("teleportAsync",teleportAsync);
+
+        ConfigurationSection cs = config.getConfigurationSection("TelportDelay");
+        if (cs != null){
+            DelayTpTime = cs.getInt("DelaySecond",DelayTpTime);
+            PlayParticle = cs.getBoolean("PlayParticle",PlayParticle);
+            START_SOUND = Sound.parseSound(cs.get("StartSound"));
+            BREAK_SOUND = Sound.parseSound(cs.get("BreakSound"));
+            END_SOUND = Sound.parseSound(cs.get("EndSound"));
+        }
 
         //读取warp.yml
         file = new File(MoeTP.plugin.getDataFolder(),"warps.yml");

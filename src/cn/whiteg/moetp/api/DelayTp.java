@@ -1,6 +1,9 @@
 package cn.whiteg.moetp.api;
 
+import cn.whiteg.mmocore.sound.SingleSound;
+import cn.whiteg.mmocore.sound.Sound;
 import cn.whiteg.moetp.MoeTP;
+import cn.whiteg.moetp.Setting;
 import cn.whiteg.moetp.utils.EntityTpUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -44,6 +47,7 @@ public class DelayTp extends BukkitRunnable {
             EntityTpUtils.PlayerOnceTp(player,loc);
             bossBar = null;
         }
+        playSound(Setting.START_SOUND);
     }
 
     public static Map<UUID, DelayTp> getMap() {
@@ -52,7 +56,7 @@ public class DelayTp extends BukkitRunnable {
 
     public static DelayTp PlayerTp(Player player,Location loc,int dec) {
         DelayTp o = map.remove(player.getUniqueId());
-        if (o != null) o.onClose();
+        if (o != null) o.onBreak();
         o = new DelayTp(player,loc,dec * 20);
         map.put(player.getUniqueId(),o);
         return o;
@@ -65,9 +69,9 @@ public class DelayTp extends BukkitRunnable {
             return;
         }
         if (!check()){
-            onClose();
+            onBreak();
             if (callback != null)
-                callback.onClose();
+                callback.onBreak();
             return;
         }
         if (preTime <= pace){
@@ -77,95 +81,80 @@ public class DelayTp extends BukkitRunnable {
 
         //int rest = preTime - pace; //剩余Tick
 
-        //颜色
-        int rgbi = (int) (0xFF * getProgress());
-        Color color;
+        if (callback != null) callback.tick();
 
-        color = Color.fromRGB(0xFF,0xFF - rgbi,rgbi); //从黄到紫色
-
-        //玩家当前位置
-/*            if (pace < 10){
-                //玩家位置准备动画
-                range += 0.08D * period;
-                double hig = pace * 0.2;
+        if (Setting.PlayParticle){
+            //颜色
+            int rgbi = (int) (0xFF * getProgress());
+            Color color;
+            color = Color.fromRGB(0xFF,0xFF - rgbi,rgbi); //从黄到紫色
+            //前20tick逐步扩大半径
+            if (pace < 20){
+                radius += 0.03D * period;
+            }
+            //玩家当前位置
+            //第一层
+            double size = 0.11D * getProgress(); //粒子范围
+            int number = (int) (5 + (5F * getProgress())); //粒子数量
+            if (pace < 10){
+                //开始从低到高
+                double hig = pace * 0.1;
                 for (int i = 0; i < 360; i += 45) {
-                    double radians = Math.toRadians((pace * 4) + i);
-                    Location loc = startLoc.clone().add(range * Math.cos(radians),hig,range * Math.sin(radians));
-                    loc.getWorld().spawnParticle(Particle.TOTEM,loc,5,0,0,0,0.0D); //经验球
+                    double radians = Math.toRadians((pace * 2 * period) + i);
+                    Location loc = startLoc.clone().add(radius * Math.cos(radians),hig,radius * Math.sin(radians));
+                    loc.getWorld().spawnParticle(Particle.REDSTONE,loc,number,0,0,0,0D,new Particle.DustOptions(color,1)); //红石自定义
                 }
             } else {
-                //玩家位置动画
-                for (int i = 0; i < 360; i += 45) {
-                    double radians = Math.toRadians((pace * 4) + i);
-                    Location loc = startLoc.clone().add(range * Math.cos(radians),2D,range * Math.sin(radians));
-                    loc.getWorld().spawnParticle(Particle.TOTEM,loc,5,0,0,0,0.0D); //经验球
+                for (int i = 0; i < 360; i += 90) {
+                    double radians = Math.toRadians((pace * 2 * period) + i);
+                    Location loc = startLoc.clone().add(radius * Math.cos(radians),0.5D,radius * Math.sin(radians));
+                    loc.getWorld().spawnParticle(Particle.REDSTONE,loc,number,size,size,size,0D,new Particle.DustOptions(color,1)); //红石自定义
                 }
-            }*/
-        //前20tick逐步扩大半径
-        if (pace < 20){
-            radius += 0.03D * period;
-        }
-        //玩家当前位置
-        //第一层
-        double size = 0.11D * getProgress(); //粒子范围
-        int number = (int) (5 + (5F * getProgress())); //粒子数量
-        if (pace < 10){
-            //开始从低到高
-            double hig = pace * 0.1;
-            for (int i = 0; i < 360; i += 45) {
-                double radians = Math.toRadians((pace * 2 * period) + i);
-                Location loc = startLoc.clone().add(radius * Math.cos(radians),hig,radius * Math.sin(radians));
-                loc.getWorld().spawnParticle(Particle.REDSTONE,loc,number,0,0,0,0D,new Particle.DustOptions(color,1)); //红石自定义
             }
-        } else {
-            for (int i = 0; i < 360; i += 90) {
-                double radians = Math.toRadians((pace * 2 * period) + i);
-                Location loc = startLoc.clone().add(radius * Math.cos(radians),0.5D,radius * Math.sin(radians));
-                loc.getWorld().spawnParticle(Particle.REDSTONE,loc,number,size,size,size,0D,new Particle.DustOptions(color,1)); //红石自定义
+            //第二层
+            if (pace < 20){
+                //开始从低到高
+                double hig = pace * 0.1;
+                for (int i = 45; i < 360; i += 90) {
+                    double radians = Math.toRadians(~(pace * 2 * period) + i);
+                    Location loc = startLoc.clone().add(radius * Math.cos(radians),hig,radius * Math.sin(radians));
+                    loc.getWorld().spawnParticle(Particle.REDSTONE,loc,number,0,0,0,0D,new Particle.DustOptions(color,1)); //红石自定义
+                }
+            } else {
+                for (int i = 45; i < 360; i += 90) {
+                    double radians = Math.toRadians(~(pace * 2 * period) + i);
+                    Location playEffectLocation = startLoc.clone().add(radius * Math.cos(radians),toLocEffY,radius * Math.sin(radians));
+                    playEffectLocation.getWorld().spawnParticle(Particle.REDSTONE,playEffectLocation,number,size,size,size,0D,new Particle.DustOptions(color,1)); //红石自定义
+                }
             }
-        }
-        //第二层
-        if (pace < 20){
-            //开始从低到高
-            double hig = pace * 0.1;
-            for (int i = 45; i < 360; i += 90) {
-                double radians = Math.toRadians(~(pace * 2 * period) + i);
-                Location loc = startLoc.clone().add(radius * Math.cos(radians),hig,radius * Math.sin(radians));
-                loc.getWorld().spawnParticle(Particle.REDSTONE,loc,number,0,0,0,0D,new Particle.DustOptions(color,1)); //红石自定义
-            }
-        } else {
-            for (int i = 45; i < 360; i += 90) {
-                double radians = Math.toRadians(~(pace * 2 * period) + i);
-                Location playEffectLocation = startLoc.clone().add(radius * Math.cos(radians),toLocEffY,radius * Math.sin(radians));
-                playEffectLocation.getWorld().spawnParticle(Particle.REDSTONE,playEffectLocation,number,size,size,size,0D,new Particle.DustOptions(color,1)); //红石自定义
+
+            color = Color.fromRGB(rgbi,0xFF - rgbi,0xFF); //从蓝到紫
+            //目的地位置动画
+            if (pace < 10){
+                //目标位置准备动画
+                double hig = pace * 0.1;
+                for (int i = 0; i < 360; i += 45) {
+                    double radians = Math.toRadians((pace * 3 * period) + i);
+                    Location loc = toLoc.clone().add(radius * Math.cos(radians),hig,radius * Math.sin(radians));
+                    loc.getWorld().spawnParticle(Particle.REDSTONE,loc,number,size,size,size,0D,new Particle.DustOptions(color,1)); //红石自定义
+                }
+            } else {
+                for (int i = 0; i <= 360; i += 90) {
+                    double radians = Math.toRadians((pace * 3 * period) + i);
+                    Location loc = toLoc.clone().add(radius * Math.cos(radians),0.5D,radius * Math.sin(radians));
+                    loc.getWorld().spawnParticle(Particle.REDSTONE,loc,number,size,size,size,0D,new Particle.DustOptions(color,1)); //红石自定义
+                }
+                //目标位置第二层
+                if (pace > 13 && pace < 25) toLocEffY += 0.08D * period;
+                //size = pace < 25 ? 0 : 0.1;
+                for (int i = 45; i <= 360; i += 90) {
+                    double radians = Math.toRadians((pace * 3 * period) + i);
+                    Location playEffectLocation = toLoc.clone().add(radius * Math.cos(radians),toLocEffY,radius * Math.sin(radians));
+                    playEffectLocation.getWorld().spawnParticle(Particle.REDSTONE,playEffectLocation,5,size,size,size,0D,new Particle.DustOptions(color,1)); //红石自定义
+                }
             }
         }
 
-        color = Color.fromRGB(rgbi,0xFF - rgbi,0xFF); //从蓝到紫
-        //目的地位置动画
-        if (pace < 10){
-            //目标位置准备动画
-            double hig = pace * 0.1;
-            for (int i = 0; i < 360; i += 45) {
-                double radians = Math.toRadians((pace * 3 * period) + i);
-                Location loc = toLoc.clone().add(radius * Math.cos(radians),hig,radius * Math.sin(radians));
-                loc.getWorld().spawnParticle(Particle.REDSTONE,loc,number,size,size,size,0D,new Particle.DustOptions(color,1)); //红石自定义
-            }
-        } else {
-            for (int i = 0; i <= 360; i += 90) {
-                double radians = Math.toRadians((pace * 3 * period) + i);
-                Location loc = toLoc.clone().add(radius * Math.cos(radians),0.5D,radius * Math.sin(radians));
-                loc.getWorld().spawnParticle(Particle.REDSTONE,loc,number,size,size,size,0D,new Particle.DustOptions(color,1)); //红石自定义
-            }
-            //目标位置第二层
-            if (pace > 13 && pace < 25) toLocEffY += 0.08D * period;
-            //size = pace < 25 ? 0 : 0.1;
-            for (int i = 45; i <= 360; i += 90) {
-                double radians = Math.toRadians((pace * 3 * period) + i);
-                Location playEffectLocation = toLoc.clone().add(radius * Math.cos(radians),toLocEffY,radius * Math.sin(radians));
-                playEffectLocation.getWorld().spawnParticle(Particle.REDSTONE,playEffectLocation,5,size,size,size,0D,new Particle.DustOptions(color,1)); //红石自定义
-            }
-        }
         pace += period;
         bossBar.setProgress(getProgress());
     }
@@ -196,8 +185,11 @@ public class DelayTp extends BukkitRunnable {
         if (status){
             startLoc.getWorld().spawnParticle(Particle.SPELL_WITCH,startLoc.add(off),600);//女巫效果
             toLoc.getWorld().spawnParticle(Particle.PORTAL,toLoc.add(off),800);//末影珍珠效果
+            playSound(Setting.END_SOUND);
+            stopSound(Setting.START_SOUND);
             //解决玩家传送到目的地后看不到自己的传送特效
             player.spawnParticle(Particle.PORTAL,toLoc,800);
+            if (Setting.END_SOUND instanceof SingleSound) ((SingleSound) Setting.END_SOUND).playTo(player,toLoc);
         } else {
             startLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,startLoc.add(off),600);//附魔台效果
             toLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,toLoc.add(off),600);//附魔台效果
@@ -208,17 +200,19 @@ public class DelayTp extends BukkitRunnable {
         }
     }
 
-    public void onClose() {
+    public void onBreak() {
         cancel();
-        player.sendMessage("§b传送已取消");
+        player.sendActionBar("§b传送已取消");
         EntityTpUtils.setTeleportCoolDown(player,5);
         bossBar.removeAll();
         Vector off = new Vector(0,0.5,0);
         startLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,startLoc.clone().add(off),600,null);//附魔台效果
         toLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,toLoc.clone().add(off),600,null);//附魔台效果
         if (callback != null){
-            callback.onClose();
+            callback.onBreak();
         }
+        stopSound(Setting.START_SOUND);
+        playSound(Setting.BREAK_SOUND);
     }
 
     public Player getPlayer() {
@@ -237,9 +231,24 @@ public class DelayTp extends BukkitRunnable {
         this.callback = callback;
     }
 
+    public void playSound(Sound sound) {
+        sound.playTo(startLoc);
+        sound.playTo(toLoc);
+    }
+
+    public void stopSound(Sound sound) {
+        if (sound instanceof SingleSound){
+            sound.stopTo(startLoc);
+            sound.stopTo(toLoc);
+        }
+    }
+
     @Override
-    public synchronized void cancel() throws IllegalStateException {
+    public synchronized void cancel() {
         map.remove(player.getUniqueId());
+        if (callback != null){
+            callback.onCancel();
+        }
         super.cancel();
     }
 }

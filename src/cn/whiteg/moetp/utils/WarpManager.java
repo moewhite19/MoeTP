@@ -23,7 +23,7 @@ public class WarpManager {
         if (loc == null){
             return null;
         }
-        return loc;
+        return loc.clone();
     }
 
     public static void setWarp(String name,Location loc) {
@@ -43,10 +43,10 @@ public class WarpManager {
         if (spawn == null){
             spawn = getWarp("spawn");
             if (spawn == null){
-                spawn = Bukkit.getWorlds().get(0).getSpawnLocation();
+                return Bukkit.getWorlds().get(0).getSpawnLocation();
             }
         }
-        return spawn;
+        return spawn.clone();
     }
 
     //储存warp传送点
