@@ -1,7 +1,7 @@
 package cn.whiteg.moetp.api;
 
-import cn.whiteg.mmocore.sound.SingleSound;
 import cn.whiteg.mmocore.sound.Sound;
+import cn.whiteg.mmocore.sound.SoundPlayer;
 import cn.whiteg.moetp.MoeTP;
 import cn.whiteg.moetp.Setting;
 import cn.whiteg.moetp.utils.EntityTpUtils;
@@ -189,7 +189,7 @@ public class DelayTp extends BukkitRunnable {
             stopSound(Setting.START_SOUND);
             //解决玩家传送到目的地后看不到自己的传送特效
             player.spawnParticle(Particle.PORTAL,toLoc,800);
-            if (Setting.END_SOUND instanceof SingleSound) ((SingleSound) Setting.END_SOUND).playTo(player,toLoc);
+            if (!(Setting.END_SOUND instanceof SoundPlayer)) Setting.END_SOUND.playTo(player,toLoc);
         } else {
             startLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,startLoc.add(off),600);//附魔台效果
             toLoc.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,toLoc.add(off),600);//附魔台效果
@@ -237,10 +237,8 @@ public class DelayTp extends BukkitRunnable {
     }
 
     public void stopSound(Sound sound) {
-        if (sound instanceof SingleSound){
-            sound.stopTo(startLoc);
-            sound.stopTo(toLoc);
-        }
+        sound.stopTo(startLoc);
+        sound.stopTo(toLoc);
     }
 
     @Override

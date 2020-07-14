@@ -16,6 +16,7 @@ public class reload extends CommandInterface {
             return true;
         }
         MoeTP.plugin.onReload();
+        sender.sendMessage("已重载");
         return true;
     }
 
