@@ -1,11 +1,11 @@
 package cn.whiteg.moetp;
 
+import cn.whiteg.mmocore.DataCon;
 import cn.whiteg.mmocore.sound.SingleSound;
 import cn.whiteg.mmocore.sound.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import cn.whiteg.mmocore.DataCon;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 public class Setting {
-    final private static int CONFIGVER = 10;
+    final private static int CONFIGVER = 11;
     public static boolean DEBUG;
     public static List<String> subCommands;
     public static FileConfiguration warps;
@@ -30,6 +30,7 @@ public class Setting {
     public static int DelayTpTime = 0;
     public static boolean ignoreLoadedChunk = true;
     public static boolean outOfBorder = true;
+    public static boolean outOfNether = true;
     public static boolean teleportAsync = false;
     public static boolean PlayParticle = false;
     public static Sound START_SOUND = Sound.EMPTY;
@@ -70,6 +71,7 @@ public class Setting {
         rcoolDownRate = config.getDouble("rcoolDownRate",rcoolDownRate);
         ignoreLoadedChunk = config.getBoolean("ignoreLoadedChunk",ignoreLoadedChunk);
         outOfBorder = config.getBoolean("outOfBorder",outOfBorder);
+        outOfNether = config.getBoolean("outOfNether",outOfNether);
         teleportAsync = config.getBoolean("teleportAsync",teleportAsync);
 
         ConfigurationSection cs = config.getConfigurationSection("TelportDelay");

@@ -24,9 +24,9 @@ import java.util.List;
 
 public class EntityTpUtils {
     public final static Field vehicleField;
+    public final static String tag = "§3传送";
     public static String noCdPlayer = "";
     public static String noBackPlayer = "";
-    public final static String tag = "§3传送";
 
     static {
         Field f = null;
@@ -86,7 +86,7 @@ public class EntityTpUtils {
 //            player.teleportAsync(loc,PlayerTeleportEvent.TeleportCause.PLUGIN);
 //            return true;
 //        }
-        return player.teleport(loc,PlayerTeleportEvent.TeleportCause.PLUGIN);
+        return player.teleport(loc.clone(),PlayerTeleportEvent.TeleportCause.PLUGIN);
     }
 
     public static boolean loadChunk(World world,int x,int z) {
@@ -128,6 +128,7 @@ public class EntityTpUtils {
         }
         new BukkitRunnable() {
             int i = 0;
+
             @Override
             public void run() {
                 if (i < el.size()){

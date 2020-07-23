@@ -47,10 +47,9 @@ public class MoeTP extends PluginBase {
             pc.setExecutor(mainCommand);
             pc.setTabCompleter(mainCommand);
         }
-        regListener(new PlayerTP());
         regListener(new PlayerFarTP());
 //        regEven(new RideTpListener());
-        if (Setting.outOfBorder) regListener(new SafeTpListener());
+        if (Setting.outOfBorder || Setting.outOfNether) regListener(new SafeTpListener());
         if (Setting.joinSpawn) regListener(new PlayerSpawnListener());
         if (Setting.setRespawn) regListener(new PlayerReSpawnListener());
 //        regEven(new PlayerReSpawnListener());

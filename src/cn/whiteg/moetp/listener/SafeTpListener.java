@@ -1,6 +1,7 @@
 package cn.whiteg.moetp.listener;
 
 import cn.whiteg.moetp.Event.PlayerFarTpEvent;
+import cn.whiteg.moetp.Setting;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -18,38 +19,44 @@ public class SafeTpListener implements Listener {
         final Location loc = event.getTo();
         Location bl = loc.clone();
         final World bw = bl.getWorld();
-        final WorldBorder wb = bw.getWorldBorder();
-        bl.add(wb.getCenter());
+
         //防止传送到边界外
-        if (Math.abs(bl.getX()) * 2 > wb.getSize() || Math.abs(bl.getZ()) * 2 > wb.getSize()){
-            event.getPlayer().sendMessage(msg);
-            event.setCancelled(true);
-            return;
+        if(Setting.outOfBorder){
+            final WorldBorder wb = bw.getWorldBorder();
+            bl.add(wb.getCenter());
+            if (Math.abs(bl.getX()) * 2 > wb.getSize() || Math.abs(bl.getZ()) * 2 > wb.getSize()){
+                event.getPlayer().sendMessage(msg);
+                event.setCancelled(true);
+                return;
+            }
         }
+
         //防止传送到地狱基岩上
-        byte high = 125;
-        bl = loc.clone();
-        if (bw.getEnvironment() == World.Environment.NETHER){
-            if (bl.getY() > high){
-                for (; high > 0; high--) {
-                    bl.setY(high);
-                    Block block = bl.getBlock();
-                    Material type = block.getType();
-                    if (type != Material.LAVA && !type.isSolid()){
-                        high--;
+        if(Setting.outOfNether){
+            byte high = 125;
+            bl = loc.clone();
+            if (bw.getEnvironment() == World.Environment.NETHER){
+                if (bl.getY() > high){
+                    for (; high > 0; high--) {
                         bl.setY(high);
-                        block = bl.getBlock();
-                        if (block.getType().isSolid()){
-                            bl.setY(high + 1);
-                            bl.setX(bl.getBlockX() + 0.5D);
-                            bl.setZ(bl.getBlockZ() + 0.5D);
-                            event.setTo(bl);
-                            return;
+                        Block block = bl.getBlock();
+                        Material type = block.getType();
+                        if (type != Material.LAVA && !type.isSolid()){
+                            high--;
+                            bl.setY(high);
+                            block = bl.getBlock();
+                            if (block.getType().isSolid()){
+                                bl.setY(high + 1);
+                                bl.setX(bl.getBlockX() + 0.5D);
+                                bl.setZ(bl.getBlockZ() + 0.5D);
+                                event.setTo(bl);
+                                return;
+                            }
                         }
                     }
+                    bl.setY(100);
+                    event.setTo(bl);
                 }
-                bl.setY(100);
-                event.setTo(bl);
             }
         }
     }

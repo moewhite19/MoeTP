@@ -1,15 +1,36 @@
 package cn.whiteg.moetp.Event;
 
+import cn.whiteg.moetp.MoeTP;
 import com.sun.istack.internal.NotNull;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
+import org.bukkit.event.*;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class PlayerFarTpEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
+
+    static {
+        MoeTP.plugin.regListener(new Listener() {
+            @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+            public void onPlayerTp(PlayerTeleportEvent event) {
+//        if (!con(event.getCause())) return;
+                Location from = event.getFrom();
+                Location to = event.getTo();
+                final double dis;
+                if (from.getWorld() == to.getWorld()){
+                    dis = from.distance(to);
+                    if (dis < 1) return;
+                } else {
+                    dis = Double.MAX_VALUE;
+                }
+                PlayerFarTpEvent tpEvent = new PlayerFarTpEvent(event,dis);
+                Bukkit.getPluginManager().callEvent(tpEvent);
+            }
+        });
+    }
+
     @NotNull
     private final PlayerTeleportEvent playerTeleportEvent;
     private double dis;
@@ -24,12 +45,12 @@ public class PlayerFarTpEvent extends Event implements Cancellable {
         this.dis = dis;
     }
 
-    @Override
-    public HandlerList getHandlers() {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
+    @Override
+    public HandlerList getHandlers() {
         return handlers;
     }
 
