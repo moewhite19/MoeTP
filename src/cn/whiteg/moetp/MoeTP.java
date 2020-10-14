@@ -1,6 +1,7 @@
 package cn.whiteg.moetp;
 
 import cn.whiteg.mmocore.common.PluginBase;
+import cn.whiteg.moetp.Event.PlayerFarTpEvent;
 import cn.whiteg.moetp.listener.*;
 import cn.whiteg.moetp.utils.WorldBorderManager;
 import net.milkbowl.vault.economy.Economy;
@@ -47,6 +48,7 @@ public class MoeTP extends PluginBase {
             pc.setExecutor(mainCommand);
             pc.setTabCompleter(mainCommand);
         }
+        regListener(new PlayerFarTpEvent.listener());
         regListener(new PlayerFarTP());
 //        regEven(new RideTpListener());
         if (Setting.outOfBorder || Setting.outOfNether) regListener(new SafeTpListener());

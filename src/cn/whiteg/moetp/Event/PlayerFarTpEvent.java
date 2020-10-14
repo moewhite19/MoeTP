@@ -1,6 +1,5 @@
 package cn.whiteg.moetp.Event;
 
-import cn.whiteg.moetp.MoeTP;
 import com.sun.istack.internal.NotNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -10,26 +9,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class PlayerFarTpEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-
-    static {
-        MoeTP.plugin.regListener(new Listener() {
-            @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-            public void onPlayerTp(PlayerTeleportEvent event) {
-//        if (!con(event.getCause())) return;
-                Location from = event.getFrom();
-                Location to = event.getTo();
-                final double dis;
-                if (from.getWorld() == to.getWorld()){
-                    dis = from.distance(to);
-                    if (dis < 1) return;
-                } else {
-                    dis = Double.MAX_VALUE;
-                }
-                PlayerFarTpEvent tpEvent = new PlayerFarTpEvent(event,dis);
-                Bukkit.getPluginManager().callEvent(tpEvent);
-            }
-        });
-    }
 
     @NotNull
     private final PlayerTeleportEvent playerTeleportEvent;
@@ -101,5 +80,23 @@ public class PlayerFarTpEvent extends Event implements Cancellable {
             dis = Double.MAX_VALUE;
         }
         return dis;
+    }
+
+    public static class listener implements Listener {
+        @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+        public void onPlayerTp(PlayerTeleportEvent event) {
+//        if (!con(event.getCause())) return;
+            Location from = event.getFrom();
+            Location to = event.getTo();
+            final double dis;
+            if (from.getWorld() == to.getWorld()){
+                dis = from.distance(to);
+                if (dis < 1) return;
+            } else {
+                dis = Double.MAX_VALUE;
+            }
+            PlayerFarTpEvent tpEvent = new PlayerFarTpEvent(event,dis);
+            Bukkit.getPluginManager().callEvent(tpEvent);
+        }
     }
 }

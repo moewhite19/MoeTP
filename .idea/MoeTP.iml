@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
-  <component name="FacetManager">
-    <facet type="minecraft" name="Minecraft">
-      <configuration>
-        <autoDetectTypes>
-          <platformType>PAPER</platformType>
-        </autoDetectTypes>
-      </configuration>
-    </facet>
-  </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
@@ -20,6 +11,6 @@
     <orderEntry type="library" name="MMOCore" level="project" />
     <orderEntry type="library" name="Vault-1.7.1" level="project" />
     <orderEntry type="library" name="MoeInfo" level="project" />
-    <orderEntry type="library" name="patched_1.16.1" level="application" />
+    <orderEntry type="library" name="spigot-1.16.3" level="application" />
   </component>
 </module>
