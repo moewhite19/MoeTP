@@ -69,9 +69,15 @@ public class CommandManage extends CommandInterface {
             sender.sendMessage("§2[§bMoeTP§2]");
             return true;
         }
-        CommandInterface c = commandMap.get(args[0]);
-        if (c != null){
-            return c.onCommand(sender,cmd,label,args);
+        CommandInterface subCommand = commandMap.get(args[0]);
+        if (subCommand != null){
+            if (args.length > 1){
+                String[] subArgs = new String[args.length - 1];
+                System.arraycopy(args,1,subArgs,0,subArgs.length);
+                return subCommand.onCommand(sender,cmd,label,subArgs);
+            } else {
+                return subCommand.onCommand(sender,cmd,label,new String[]{});
+            }
         } else {
             sender.sendMessage("无效指令");
         }
