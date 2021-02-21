@@ -34,7 +34,7 @@ public class DelayTp extends BukkitRunnable {
     private double toLocEffY = 0.5D; //目标位置特效第二层
     private int period = 2; //步进间隔,越小越精细，同时越消耗资源
 
-    public DelayTp(Player player,Location loc,int deny) {
+    DelayTp(Player player,Location loc,int deny) {
         this.player = player;
         this.toLoc = loc;
         this.startLoc = player.getLocation();
@@ -56,10 +56,11 @@ public class DelayTp extends BukkitRunnable {
     }
 
     public static DelayTp PlayerTp(Player player,Location loc,int dec) {
-        DelayTp o = map.remove(player.getUniqueId());
+        UUID uuid = player.getUniqueId();
+        DelayTp o = map.get(uuid);
         if (o != null) o.onBreak();
         o = new DelayTp(player,loc,dec * 20);
-        map.put(player.getUniqueId(),o);
+        map.put(uuid,o);
         return o;
     }
 
