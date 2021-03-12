@@ -3,29 +3,27 @@ package cn.whiteg.moetp.commands;
 import cn.whiteg.mmocore.common.CommandInterface;
 import cn.whiteg.moetp.api.TpahereReqest;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class tpahere extends CommandInterface {
 
     @Override
     public boolean onCommand(CommandSender sender,Command cmd,String label,String[] args) {
-        if (args.length == 2 && sender instanceof Player){
+        if (args.length == 1 && sender instanceof Player){
             if (sender.hasPermission("mmo.tpahere")){
                 Player p1 = (Player) sender;
-                Player p2 = Bukkit.getPlayer(args[1]);
+                Player p2 = Bukkit.getPlayer(args[0]);
                 if (p2 == null){
                     sender.sendMessage("§b找不到玩家");
                     return true;
                 }
                 if (p1 == p2) return true;
-                final Location loc = ((Player) sender).getLocation();
                 new TpahereReqest(p1).sendTo(p2);
+//                final Location loc = ((Player) sender).getLocation();
 //                String confirmID = "tpahere@" + sender.getName();
 //                TextComponent a0 = new TextComponent(" §f" + p1.getDisplayName());
 //                a0.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder(p1.getDisplayName()).append("§r\n位置: " + LocationUtils.LocationUtils(p1.getLocation())).create()));
@@ -58,13 +56,10 @@ public class tpahere extends CommandInterface {
 
     @Override
     public List<String> onTabComplete(CommandSender sender,Command cmd,String label,String[] args) {
-        if (args.length == 2){
-            List<String> ls = new ArrayList<>();
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                ls.add(p.getName());
-            }
-            ls.remove(sender.getName());
-            return getMatches(args[1],ls);
+        if (args.length == 1){
+            List<String> list = PlayersList(args);
+            list.remove(sender.getName());
+            return list;
         }
         return null;
     }

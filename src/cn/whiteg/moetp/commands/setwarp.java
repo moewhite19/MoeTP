@@ -1,6 +1,7 @@
 package cn.whiteg.moetp.commands;
 
 import cn.whiteg.mmocore.common.CommandInterface;
+import cn.whiteg.mmocore.common.HasCommandInterface;
 import cn.whiteg.moetp.Setting;
 import cn.whiteg.moetp.utils.WarpManager;
 import org.bukkit.Location;
@@ -12,26 +13,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class setwarp extends CommandInterface {
+public class setwarp extends HasCommandInterface {
 
     @Override
-    public boolean onCommand(CommandSender sender,Command cmd,String label,String[] args) {
+    public boolean executor(CommandSender sender,Command cmd,String label,String[] args) {
         if (sender instanceof Player){
-            if (sender.hasPermission("mmo.setwarp")){
-                Player player = (Player) sender;
-                Location loc = player.getLocation();
-                if (args.length == 2){
-                    if (args[1].contains(".")){
-                        player.sendMessage("§b名字含非法字符");
-                        return true;
-                    }
-                    WarpManager.setWarp(args[1],loc);
-                    sender.sendMessage("§b设置传送点成功");
-                } else {
-                    sender.sendMessage("参数错误");
+            Player player = (Player) sender;
+            Location loc = player.getLocation();
+            if (args.length == 1){
+                if (args[0].contains(".")){
+                    player.sendMessage("§b名字含非法字符");
+                    return true;
                 }
+                WarpManager.setWarp(args[0],loc);
+                sender.sendMessage("§b设置传送点成功");
             } else {
-                sender.sendMessage("阁下没有权限");
+                sender.sendMessage("参数错误");
             }
             return true;
         }
@@ -40,10 +37,15 @@ public class setwarp extends CommandInterface {
 
     @Override
     public List<String> onTabComplete(CommandSender sender,Command cmd,String label,String[] args) {
-        if (args.length == 2){
+        if (args.length == 1){
             List<String> warps = new ArrayList<>(Setting.warps.getKeys(false));
-            return getMatches(args[1],warps);
+            return getMatches(args,warps);
         }
         return null;
+    }
+
+    @Override
+    public boolean canUseCommand(CommandSender sender) {
+        return sender.hasPermission("mmo.setwarp");
     }
 }

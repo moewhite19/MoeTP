@@ -21,17 +21,17 @@ public class sethome extends CommandInterface {
         if (!(sender instanceof Player)) return false;
         Player player = (Player) sender;
         if (!sender.hasPermission("mmo.sethome")) return false;
-        if (args.length == 1){
+        if (args.length == 0){
             sethome(player,player.getLocation(),"home");
-        } else if (args.length == 2){
-            sethome(player,player.getLocation(),args[1]);
+        } else if (args.length == 1){
+            sethome(player,player.getLocation(),args[0]);
         }
         return false;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender,Command cmd,String label,String[] args) {
-        if (args.length == 2){
+        if (args.length == 1){
             if (!(sender instanceof Player)) return null;
             Player player = (Player) sender;
             DataCon dc = MMOCore.getPlayerData(player);
@@ -40,7 +40,7 @@ public class sethome extends CommandInterface {
                 return null;
             }
             List<String> warps = new ArrayList<>(homes.getKeys(false));
-            return getMatches(args[1],warps);
+            return getMatches(args,warps);
         }
         return null;
     }

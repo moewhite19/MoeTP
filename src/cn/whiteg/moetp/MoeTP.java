@@ -1,12 +1,12 @@
 package cn.whiteg.moetp;
 
+import cn.whiteg.mmocore.common.CommandManage;
 import cn.whiteg.mmocore.common.PluginBase;
 import cn.whiteg.moetp.Event.PlayerFarTpEvent;
 import cn.whiteg.moetp.listener.*;
 import cn.whiteg.moetp.utils.WorldBorderManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.util.logging.Logger;
@@ -34,20 +34,9 @@ public class MoeTP extends PluginBase {
         logger.info("开始加载插件");
         if (Setting.DEBUG){
             logger.info("§a调试模式已开启");
-//            World world = Bukkit.getWorlds().get(0);
-//            WorldBorder wb = world.getWorldBorder();
-//            wb.setSize(500);
-//            wb.setWarningDistance(50);
-//            wb.setDamageBuffer(40);
-//            wb.setWarningTime(30);
-//            wb.setCenter(world.getSpawnLocation());
         }
-        mainCommand = new CommandManage();
-        PluginCommand pc = getCommand("moetp");
-        if (pc != null){
-            pc.setExecutor(mainCommand);
-            pc.setTabCompleter(mainCommand);
-        }
+        mainCommand = new CommandManage(this);
+        mainCommand.setExecutor();
         regListener(new PlayerFarTpEvent.listener());
         regListener(new PlayerFarTP());
 //        regEven(new RideTpListener());

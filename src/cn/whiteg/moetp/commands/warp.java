@@ -22,7 +22,7 @@ public class warp extends CommandInterface {
     @Override
     public boolean onCommand(CommandSender sender,Command cmd,String label,String[] args) {
         if (!sender.hasPermission("mmo.warp")) return false;
-        if (args.length == 1){
+        if (args.length == 0){
             Set<String> keys = Setting.warps.getKeys(false);
 //            sender.sendMessage("当前可用传送点有:");
             ComponentBuilder cb = new ComponentBuilder("当前可用warp有:\n");
@@ -30,27 +30,27 @@ public class warp extends CommandInterface {
                 cb.append(st + " ").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/warp " + st)).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("点我传送至§9" + st).create()));
             }
             sender.spigot().sendMessage(cb.create());
-        } else if (args.length == 2){
+        } else if (args.length == 1){
             if (!(sender instanceof Player)) return false;
-            Location loc = WarpManager.getWarp(args[1]);
+            Location loc = WarpManager.getWarp(args[0]);
             if (loc == null){
                 sender.sendMessage("未知传送点");
                 return true;
             }
             EntityTpUtils.PlayerTP((Player) sender,loc);
-            sender.sendMessage("传送到" + args[1]);
+            sender.sendMessage("传送到" + args[0]);
             return true;
-        } else if (args.length == 4){
+        } else if (args.length == 2){
             if (!sender.hasPermission("mmo.tpo")) return false;
-            Player player = Bukkit.getPlayer(args[3]);
+            Player player = Bukkit.getPlayer(args[1]);
             if (player == null) return false;
-            Location loc = WarpManager.getWarp(args[1]);
+            Location loc = WarpManager.getWarp(args[0]);
             if (loc == null){
                 sender.sendMessage("未知传送点");
                 return true;
             }
             EntityTpUtils.PlayerOnceTp(player,loc);
-            sender.sendMessage("传送到" + args[1]);
+            sender.sendMessage(sender + "§b将你传送到§f" + args[0]);
             return true;
         }
         return false;
@@ -58,9 +58,9 @@ public class warp extends CommandInterface {
 
     @Override
     public List<String> onTabComplete(CommandSender sender,Command cmd,String label,String[] args) {
-        if (args.length == 2){
+        if (args.length == 1){
             List<String> warps = new ArrayList<>(Setting.warps.getKeys(false));
-            return getMatches(args[1],warps);
+            return getMatches(args,warps);
         }
         return null;
     }

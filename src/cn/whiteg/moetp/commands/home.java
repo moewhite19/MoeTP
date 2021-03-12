@@ -1,8 +1,8 @@
 package cn.whiteg.moetp.commands;
 
-import cn.whiteg.mmocore.common.CommandInterface;
 import cn.whiteg.mmocore.DataCon;
 import cn.whiteg.mmocore.MMOCore;
+import cn.whiteg.mmocore.common.CommandInterface;
 import cn.whiteg.mmocore.util.YamlUtils;
 import cn.whiteg.moetp.utils.EntityTpUtils;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -24,7 +24,7 @@ public class home extends CommandInterface {
     public boolean onCommand(CommandSender sender,Command cmd,String label,String[] args) {
         if (!(sender instanceof Player)) return false;
         Player player = (Player) sender;
-        if (args.length == 1){
+        if (args.length == 0){
             DataCon dc = MMOCore.getPlayerData(player);
             ConfigurationSection homes = dc.getConfig().getConfigurationSection("homes");
             if (homes == null){
@@ -32,7 +32,7 @@ public class home extends CommandInterface {
                 return false;
             }
             Set<String> keys = homes.getKeys(false);
-            if(keys.isEmpty()){
+            if (keys.isEmpty()){
                 sender.sendMessage("阁下当前没有home");
                 return false;
             }
@@ -41,16 +41,16 @@ public class home extends CommandInterface {
                 cb.append(st + " ").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/home " + st)).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("点我传送至§9" + st).create()));
             }
             player.spigot().sendMessage(cb.create());
-        } else if (args.length == 2){
+        } else if (args.length == 1){
             DataCon dc = MMOCore.getPlayerData(player);
             ConfigurationSection homes = dc.getConfig().getConfigurationSection("homes");
             if (homes == null){
                 return false;
             }
             if (!sender.hasPermission("mmo.home")) return false;
-            ConfigurationSection cs = homes.getConfigurationSection(args[1]);
+            ConfigurationSection cs = homes.getConfigurationSection(args[0]);
             if (cs == null){
-                sender.sendMessage("§b传送点不存在");
+                sender.sendMessage("§bHome不存在");
                 return true;
             }
             Location loc = YamlUtils.getLocation(cs);
@@ -59,7 +59,7 @@ public class home extends CommandInterface {
                 return true;
             }
             EntityTpUtils.PlayerTP(player,loc);
-            sender.sendMessage("传送到" + args[1]);
+            sender.sendMessage("传送到" + args[0]);
             return true;
         }
         return false;
@@ -67,7 +67,7 @@ public class home extends CommandInterface {
 
     @Override
     public List<String> onTabComplete(CommandSender sender,Command cmd,String label,String[] args) {
-        if (args.length == 2){
+        if (args.length == 1){
             if (!(sender instanceof Player)) return null;
             Player player = (Player) sender;
             DataCon dc = MMOCore.getPlayerData(player);
@@ -76,7 +76,7 @@ public class home extends CommandInterface {
                 return null;
             }
             List<String> warps = new ArrayList<>(homes.getKeys(false));
-            return getMatches(args[1],warps);
+            return getMatches(args,warps);
         }
         return null;
     }

@@ -3,6 +3,7 @@ package cn.whiteg.moetp.commands;
 import cn.whiteg.mmocore.DataCon;
 import cn.whiteg.mmocore.MMOCore;
 import cn.whiteg.mmocore.common.CommandInterface;
+import cn.whiteg.mmocore.common.HasCommandInterface;
 import cn.whiteg.mmocore.util.YamlUtils;
 import cn.whiteg.moetp.utils.EntityTpUtils;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -18,15 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class ohome extends CommandInterface {
+public class ohome extends HasCommandInterface {
 
     @Override
-    public boolean onCommand(CommandSender sender,Command cmd,String label,String[] args) {
-        if (!sender.hasPermission("mmo.otherhome")) return false;
+    public boolean executor(CommandSender sender,Command cmd,String label,String[] args) {
         if (!(sender instanceof Player)) return false;
         Player player = (Player) sender;
-        if (args.length == 2){
-            DataCon dc = MMOCore.getPlayerData(args[1]);
+        if (args.length == 1){
+            DataCon dc = MMOCore.getPlayerData(args[0]);
             if (dc == null){
                 sender.sendMessage("找不到玩家");
                 return false;
@@ -46,8 +46,8 @@ public class ohome extends CommandInterface {
                 cb.append(st + " ").event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/ohome " + dc.getName() + ' ' + st)).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("点我传送至§9" + st).create()));
             }
             player.spigot().sendMessage(cb.create());
-        } else if (args.length == 3){
-            DataCon dc = MMOCore.getPlayerData(args[1]);
+        } else if (args.length == 2){
+            DataCon dc = MMOCore.getPlayerData(args[0]);
             if (dc == null){
                 sender.sendMessage("找不到玩家");
                 return false;
@@ -56,7 +56,7 @@ public class ohome extends CommandInterface {
             if (homes == null){
                 return false;
             }
-            ConfigurationSection cs = homes.getConfigurationSection(args[2]);
+            ConfigurationSection cs = homes.getConfigurationSection(args[1]);
             if (cs == null){
                 sender.sendMessage("§b传送点不存在");
                 return true;
@@ -67,20 +67,19 @@ public class ohome extends CommandInterface {
                 return true;
             }
             EntityTpUtils.PlayerTP(player,loc);
-            sender.sendMessage("传送到" + args[2]);
+            sender.sendMessage("传送到" + args[1]);
             return true;
         }
         return false;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender,Command cmd,String label,String[] args) {
-        if (!sender.hasPermission("mmo.otherhome")) return null;
-        if (args.length == 2){
+    public List<String> completer(CommandSender sender,Command cmd,String label,String[] args) {
+        if (args.length == 1){
             return getMatches(MMOCore.getLatelyPlayerList(),args);
-        } else if (args.length == 3){
+        } else if (args.length == 2){
             if (!(sender instanceof Player)) return null;
-            DataCon dc = MMOCore.getPlayerData(args[1]);
+            DataCon dc = MMOCore.getPlayerData(args[0]);
             if (dc == null){
                 sender.sendMessage("找不到玩家");
                 return null;
@@ -89,9 +88,14 @@ public class ohome extends CommandInterface {
             if (homes == null){
                 return null;
             }
-            List<String> warps = new ArrayList<>(homes.getKeys(false));
-            return getMatches(args[2],warps);
+            List<String> list = new ArrayList<>(homes.getKeys(false));
+            return getMatches(args,list);
         }
         return null;
+    }
+
+    @Override
+    public boolean canUseCommand(CommandSender sender) {
+        return sender.hasPermission("mmo.otherhome");
     }
 }

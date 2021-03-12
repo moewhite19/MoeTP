@@ -1,8 +1,8 @@
 package cn.whiteg.moetp.commands;
 
-import cn.whiteg.mmocore.common.CommandInterface;
 import cn.whiteg.mmocore.DataCon;
 import cn.whiteg.mmocore.MMOCore;
+import cn.whiteg.mmocore.common.CommandInterface;
 import cn.whiteg.mmocore.util.YamlUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -19,16 +19,16 @@ public class rmhome extends CommandInterface {
         if (!(sender instanceof Player)) return false;
         Player player = (Player) sender;
         if (!sender.hasPermission("mmo.rmhome")) return false;
-        if (args.length == 1){
+        if (args.length == 0){
             DataCon dc = MMOCore.getPlayerData(player);
             ConfigurationSection homes = dc.getConfig().getConfigurationSection("homes");
-            if(homes == null) return false;
-            YamlUtils.setLocation(homes.createSection("home") , player.getLocation());
-        } else if (args.length == 2){
+            if (homes == null) return false;
+            YamlUtils.setLocation(homes.createSection("home"),player.getLocation());
+        } else if (args.length == 1){
             DataCon dc = MMOCore.getPlayerData(player);
             ConfigurationSection homes = dc.getConfig().getConfigurationSection("homes");
-            homes.set(args[1] , null);
-            sender.sendMessage("删除home " + args[1]);
+            homes.set(args[0],null);
+            sender.sendMessage("删除home " + args[0]);
             dc.onSet();
             return true;
         }
@@ -37,14 +37,14 @@ public class rmhome extends CommandInterface {
 
     @Override
     public List<String> onTabComplete(CommandSender sender,Command cmd,String label,String[] args) {
-        if (args.length == 2){
+        if (args.length == 1){
             if (!(sender instanceof Player)) return null;
             Player player = (Player) sender;
             DataCon dc = MMOCore.getPlayerData(player);
             ConfigurationSection homes = dc.getConfig().getConfigurationSection("homes");
-            if(homes == null) return null;
-            List<String> warps = new ArrayList<>(homes.getKeys(false));
-            return getMatches(args[1],warps);
+            if (homes == null) return null;
+            List<String> list = new ArrayList<>(homes.getKeys(false));
+            return getMatches(args,list);
         }
         return null;
     }

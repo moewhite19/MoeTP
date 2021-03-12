@@ -1,6 +1,7 @@
 package cn.whiteg.moetp.commands;
 
 import cn.whiteg.mmocore.common.CommandInterface;
+import cn.whiteg.mmocore.common.HasCommandInterface;
 import cn.whiteg.moetp.Setting;
 import cn.whiteg.moetp.utils.WarpManager;
 import org.bukkit.command.Command;
@@ -10,29 +11,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class rmwarp extends CommandInterface {
+public class rmwarp extends HasCommandInterface {
 
     @Override
-    public boolean onCommand(CommandSender sender,Command cmd,String label,String[] args) {
-        if (sender.hasPermission("mmo.setwarp")){
-            if (args.length == 2){
-                WarpManager.removeWarp(args[1]);
-                sender.sendMessage("§b移除传送点成功");
-            } else {
-                sender.sendMessage("参数错误");
-            }
+    public boolean executor(CommandSender sender,Command cmd,String label,String[] args) {
+        if (args.length == 1){
+            WarpManager.removeWarp(args[0]);
+            sender.sendMessage("§b移除传送点成功");
         } else {
-            sender.sendMessage("阁下没有权限");
+            sender.sendMessage("参数错误");
         }
         return true;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender,Command cmd,String label,String[] args) {
-        if (args.length == 2){
+    public List<String> completer(CommandSender sender,Command cmd,String label,String[] args) {
+        if (args.length == 1){
             List<String> warps = new ArrayList<>(Setting.warps.getKeys(false));
-            return getMatches(args[1],warps);
+            return getMatches(args[0],warps);
         }
         return null;
+    }
+
+    @Override
+    public boolean canUseCommand(CommandSender sender) {
+        return sender.hasPermission("mmo.setwarp");
     }
 }
