@@ -22,7 +22,7 @@ import java.util.Set;
 public class ohome extends HasCommandInterface {
 
     @Override
-    public boolean executor(CommandSender sender,Command cmd,String label,String[] args) {
+    public boolean executo(CommandSender sender,Command cmd,String label,String[] args) {
         if (!(sender instanceof Player)) return false;
         Player player = (Player) sender;
         if (args.length == 1){
@@ -74,7 +74,7 @@ public class ohome extends HasCommandInterface {
     }
 
     @Override
-    public List<String> completer(CommandSender sender,Command cmd,String label,String[] args) {
+    public List<String> complete(CommandSender sender,Command cmd,String label,String[] args) {
         if (args.length == 1){
             return getMatches(MMOCore.getLatelyPlayerList(),args);
         } else if (args.length == 2){

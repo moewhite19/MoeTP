@@ -14,7 +14,7 @@ import java.util.List;
 public class top extends HasCommandInterface {
 
     @Override
-    public boolean executor(CommandSender sender,Command cmd,String label,String[] args) {
+    public boolean executo(CommandSender sender,Command cmd,String label,String[] args) {
         if (args.length == 0){
             if (sender instanceof Player){
                 Location loc = ((Player) sender).getLocation();
@@ -40,7 +40,7 @@ public class top extends HasCommandInterface {
     }
 
     @Override
-    public List<String> completer(CommandSender sender,Command cmd,String label,String[] args) {
+    public List<String> complete(CommandSender sender,Command cmd,String label,String[] args) {
         if (args.length == 1){
             List<String> list = PlayersList(args);
             list.remove(sender.getName());

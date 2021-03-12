@@ -24,7 +24,7 @@ public class impo extends HasCommandInterface {
     List<String> arr = new ArrayList<>();
 
     @Override
-    public boolean executor(CommandSender sender,Command cmd,String label,String[] args) {
+    public boolean executo(CommandSender sender,Command cmd,String label,String[] args) {
         if (args.length == 1){
             if (args[0].equals("esshomes")){
                 File dir = new File(MoeTP.plugin.getDataFolder(),"Player");
@@ -58,7 +58,7 @@ public class impo extends HasCommandInterface {
     }
 
     @Override
-    public List<String> completer(CommandSender sender,Command cmd,String label,String[] args) {
+    public List<String> complete(CommandSender sender,Command cmd,String label,String[] args) {
         return arr;
     }
 

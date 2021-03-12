@@ -14,7 +14,7 @@ import java.util.List;
 public class tpoall extends HasCommandInterface {
 
     @Override
-    public boolean executor(CommandSender sender,Command cmd,String label,String[] args) {
+    public boolean executo(CommandSender sender,Command cmd,String label,String[] args) {
         if (args.length == 0 && sender instanceof Player){
             Player p1 = (Player) sender;
             p1.sendMessage("§b将所有人传送过来");

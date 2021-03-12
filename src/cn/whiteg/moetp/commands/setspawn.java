@@ -13,7 +13,7 @@ import java.util.List;
 public class setspawn extends HasCommandInterface {
 
     @Override
-    public boolean executor(CommandSender sender,Command cmd,String label,String[] args) {
+    public boolean executo(CommandSender sender,Command cmd,String label,String[] args) {
         if (sender instanceof Player){
             Player player = (Player) sender;
             Location loc = player.getLocation();

@@ -13,7 +13,7 @@ import java.util.List;
 public class tpaall extends HasCommandInterface {
 
     @Override
-    public boolean executor(CommandSender sender,Command cmd,String label,String[] args) {
+    public boolean executo(CommandSender sender,Command cmd,String label,String[] args) {
         if (args.length == 0 && sender instanceof Player){
             Player p1 = (Player) sender;
             sender.sendMessage(" §b给所有玩家发送传送请求");
@@ -26,7 +26,7 @@ public class tpaall extends HasCommandInterface {
     }
 
     @Override
-    public List<String> completer(CommandSender sender,Command cmd,String label,String[] args) {
+    public List<String> complete(CommandSender sender,Command cmd,String label,String[] args) {
         if (args.length == 1){
             List<String> ls = new ArrayList<>();
             for (Player p : Bukkit.getOnlinePlayers()) {

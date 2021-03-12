@@ -14,7 +14,7 @@ import java.util.List;
 public class rmwarp extends HasCommandInterface {
 
     @Override
-    public boolean executor(CommandSender sender,Command cmd,String label,String[] args) {
+    public boolean executo(CommandSender sender,Command cmd,String label,String[] args) {
         if (args.length == 1){
             WarpManager.removeWarp(args[0]);
             sender.sendMessage("§b移除传送点成功");
@@ -25,7 +25,7 @@ public class rmwarp extends HasCommandInterface {
     }
 
     @Override
-    public List<String> completer(CommandSender sender,Command cmd,String label,String[] args) {
+    public List<String> complete(CommandSender sender,Command cmd,String label,String[] args) {
         if (args.length == 1){
             List<String> warps = new ArrayList<>(Setting.warps.getKeys(false));
             return getMatches(args[0],warps);

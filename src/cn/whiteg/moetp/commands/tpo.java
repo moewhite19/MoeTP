@@ -13,7 +13,7 @@ import java.util.List;
 public class tpo extends HasCommandInterface {
 
     @Override
-    public boolean executor(CommandSender sender,Command cmd,String label,String[] args) {
+    public boolean executo(CommandSender sender,Command cmd,String label,String[] args) {
         if (args.length == 1 && sender instanceof Player){
             Player p1 = (Player) sender;
             Player p2 = Bukkit.getPlayer(args[0]);
