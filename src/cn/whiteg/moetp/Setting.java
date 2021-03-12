@@ -78,9 +78,9 @@ public class Setting {
         if (cs != null){
             DelayTpTime = cs.getInt("DelaySecond",DelayTpTime);
             PlayParticle = cs.getBoolean("PlayParticle",PlayParticle);
-            START_SOUND = Sound.parseSound(cs.get("StartSound"));
-            BREAK_SOUND = Sound.parseSound(cs.get("BreakSound"));
-            END_SOUND = Sound.parseSound(cs.get("EndSound"));
+            START_SOUND = Sound.parseYml(cs.get("StartSound"));
+            BREAK_SOUND = Sound.parseYml(cs.get("BreakSound"));
+            END_SOUND = Sound.parseYml(cs.get("EndSound"));
         }
 
         //读取warp.yml
