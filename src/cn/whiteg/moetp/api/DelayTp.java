@@ -2,11 +2,9 @@ package cn.whiteg.moetp.api;
 
 import cn.whiteg.mmocore.sound.Sound;
 import cn.whiteg.mmocore.sound.SoundPlayer;
-import cn.whiteg.moeInfo.nms.ActionBar;
 import cn.whiteg.moetp.MoeTP;
 import cn.whiteg.moetp.Setting;
 import cn.whiteg.moetp.utils.EntityTpUtils;
-import cn.whiteg.moetp.utils.LocationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -205,7 +203,7 @@ public class DelayTp extends BukkitRunnable {
 
     public void onBreak() {
         cancel();
-        ActionBar.sendActionBar(player,"§b传送已取消");
+        player.sendActionBar("§b传送已取消");
         EntityTpUtils.setTeleportCoolDown(player,5);
         bossBar.removeAll();
         Vector off = new Vector(0,0.5,0);
